@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+/* Art Deco Theme Variables */
+@theme {
+  --color-gold: #D4AF37;
+  --color-gold-light: #FFD700;
+  --color-gold-dark: #B8960C;
+  --color-black: #0D0D0D;
+  --color-cream: #F5F5DC;
+  --color-cream-dark: #E8E4C9;
+
+  --font-display: "Playfair Display", serif;
+  --font-body: "Raleway", sans-serif;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-black);
+  color: var(--color-cream);
+  min-height: 100vh;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* Art Deco decorative elements */
+.art-deco-border {
+  border: 2px solid var(--color-gold);
+  position: relative;
+}
+
+.art-deco-border::before,
+.art-deco-border::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-gold);
+}
+
+.art-deco-border::before {
+  top: -6px;
+  left: -6px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.art-deco-border::after {
+  bottom: -6px;
+  right: -6px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Gold gradient text */
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold) 50%, var(--color-gold-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Button styles */
+.btn-gold {
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  color: var(--color-black);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.btn-gold:hover {
+  background: linear-gradient(135deg, var(--color-gold-light) 0%, var(--color-gold) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+/* Card styles */
+.card-deco {
+  background: linear-gradient(180deg, rgba(13, 13, 13, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%);
+  border: 1px solid var(--color-gold);
+  padding: 1.5rem;
+}
+
+/* Nominee card selected state */
+.nominee-selected {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(184, 150, 12, 0.1) 100%);
+  border-color: var(--color-gold-light);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+/* Sunburst pattern */
+.sunburst {
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      var(--color-gold) 0deg 10deg,
+      transparent 10deg 20deg
+    );
+  opacity: 0.1;
+}
+
+/* Chevron pattern */
+.chevron-pattern {
+  background-image:
+    linear-gradient(135deg, var(--color-gold) 25%, transparent 25%),
+    linear-gradient(225deg, var(--color-gold) 25%, transparent 25%);
+  background-size: 20px 10px;
+  opacity: 0.1;
+}
