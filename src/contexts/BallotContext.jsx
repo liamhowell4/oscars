@@ -1,16 +1,12 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import {
   doc,
   getDoc,
   setDoc,
   onSnapshot,
   serverTimestamp,
-  collection,
-  query,
-  where,
-  getDocs
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { db, firebaseConfigured } from '../lib/firebase';
 import { useAuth } from './AuthContext';
 import nominees from '../data/nominees2026.json';
 
@@ -19,7 +15,7 @@ const BallotContext = createContext(null);
 export function BallotProvider({ children }) {
   const { user } = useAuth();
   const [picks, setPicks] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(firebaseConfigured);
   const [saving, setSaving] = useState(false);
   const [config, setConfig] = useState({
     lockTime: null,
@@ -27,10 +23,11 @@ export function BallotProvider({ children }) {
     ceremonyStarted: false,
   });
   const [winners, setWinners] = useState({});
-  const [ballotId, setBallotId] = useState(null);
+  const picksRef = useRef({});
 
   // Listen to config changes
   useEffect(() => {
+    if (!db) return;
     const unsubscribe = onSnapshot(doc(db, 'config', 'ceremony'), (snapshot) => {
       if (snapshot.exists()) {
         setConfig(snapshot.data());
@@ -41,6 +38,7 @@ export function BallotProvider({ children }) {
 
   // Listen to winners changes
   useEffect(() => {
+    if (!db) return;
     const unsubscribe = onSnapshot(doc(db, 'config', 'winners'), (snapshot) => {
       if (snapshot.exists()) {
         setWinners(snapshot.data());
@@ -49,37 +47,30 @@ export function BallotProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  // Load user's ballot
+  // Load user's ballot (keyed by user UID)
   useEffect(() => {
-    if (!user) {
+    if (!user || !db) {
       setPicks({});
-      setBallotId(null);
+      picksRef.current = {};
       setLoading(false);
       return;
     }
 
-    const loadBallot = async () => {
-      setLoading(true);
-      try {
-        const ballotsRef = collection(db, 'ballots');
-        const q = query(ballotsRef, where('userId', '==', user.uid));
-        const snapshot = await getDocs(q);
-
-        if (!snapshot.empty) {
-          const ballotDoc = snapshot.docs[0];
-          setBallotId(ballotDoc.id);
-          setPicks(ballotDoc.data().picks || {});
-        } else {
-          setPicks({});
-          setBallotId(null);
+    setLoading(true);
+    getDoc(doc(db, 'ballots', user.uid))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const ballotPicks = snapshot.data().picks || {};
+          setPicks(ballotPicks);
+          picksRef.current = ballotPicks;
         }
-      } catch (error) {
+      })
+      .catch((error) => {
         console.error('Error loading ballot:', error);
-      }
-      setLoading(false);
-    };
-
-    loadBallot();
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [user]);
 
   const isLocked = () => {
@@ -92,31 +83,24 @@ export function BallotProvider({ children }) {
   };
 
   const savePick = async (categoryId, nomineeId) => {
-    if (!user || isLocked()) return;
+    if (!user || !db || isLocked()) return;
 
-    setSaving(true);
-    const newPicks = { ...picks, [categoryId]: nomineeId };
+    // Use ref to get latest picks, avoiding stale closure on rapid saves
+    const newPicks = { ...picksRef.current, [categoryId]: nomineeId };
     setPicks(newPicks);
+    picksRef.current = newPicks;
+    setSaving(true);
 
     try {
-      if (ballotId) {
-        // Update existing ballot
-        await setDoc(doc(db, 'ballots', ballotId), {
+      await setDoc(
+        doc(db, 'ballots', user.uid),
+        {
           userId: user.uid,
           picks: newPicks,
           updatedAt: serverTimestamp(),
-        }, { merge: true });
-      } else {
-        // Create new ballot
-        const newBallotRef = doc(collection(db, 'ballots'));
-        await setDoc(newBallotRef, {
-          userId: user.uid,
-          picks: newPicks,
-          score: 0,
-          updatedAt: serverTimestamp(),
-        });
-        setBallotId(newBallotRef.id);
-      }
+        },
+        { merge: true }
+      );
     } catch (error) {
       console.error('Error saving pick:', error);
     }

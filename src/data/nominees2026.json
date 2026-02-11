@@ -1,264 +1,275 @@
 {
   "year": 2026,
   "ceremony": "98th Academy Awards",
-  "ceremonyDate": "2026-03-02",
+  "ceremonyDate": "2026-03-15",
   "categories": [
     {
-      "id": "best-picture",
-      "name": "Best Picture",
+      "id": "best-casting",
+      "name": "Best Casting",
       "nominees": [
-        { "id": "anora", "title": "Anora", "info": "Sean Baker, Alex Coco, Samantha Quan" },
-        { "id": "brutalist", "title": "The Brutalist", "info": "Brady Corbet, Nick Gordon, Andrew Lauren" },
-        { "id": "complete-unknown", "title": "A Complete Unknown", "info": "Fred Berger, James Mangold, Alex Heineman, Bob Dylan, Jeff Rosen" },
-        { "id": "conclave", "title": "Conclave", "info": "Tessa Ross, Juliette Howell, Michael A. Jackman" },
-        { "id": "dune-two", "title": "Dune: Part Two", "info": "Mary Parent, Cale Boyter, Denis Villeneuve" },
-        { "id": "emilia-perez", "title": "Emilia Pérez", "info": "Jacques Audiard, Pascal Caucheteux, Valérie Schermann" },
-        { "id": "im-still-here", "title": "I'm Still Here", "info": "Walter Salles, Anna Muylaert, Maria Carlota Bruno" },
-        { "id": "nickel-boys", "title": "Nickel Boys", "info": "Dede Gardner, Jeremy Kleiner, David Levine" },
-        { "id": "substance", "title": "The Substance", "info": "Tim Bevan, Eric Fellner, Coralie Fargeat" },
-        { "id": "wicked", "title": "Wicked", "info": "Marc Platt, David Stone" }
-      ]
-    },
-    {
-      "id": "best-director",
-      "name": "Best Director",
-      "nominees": [
-        { "id": "audiard", "title": "Jacques Audiard", "info": "Emilia Pérez" },
-        { "id": "baker", "title": "Sean Baker", "info": "Anora" },
-        { "id": "corbet", "title": "Brady Corbet", "info": "The Brutalist" },
-        { "id": "fargeat", "title": "Coralie Fargeat", "info": "The Substance" },
-        { "id": "mangold", "title": "James Mangold", "info": "A Complete Unknown" }
-      ]
-    },
-    {
-      "id": "best-actor",
-      "name": "Best Actor",
-      "nominees": [
-        { "id": "brody", "title": "Adrien Brody", "info": "The Brutalist" },
-        { "id": "chalamet", "title": "Timothée Chalamet", "info": "A Complete Unknown" },
-        { "id": "fiennes", "title": "Ralph Fiennes", "info": "Conclave" },
-        { "id": "washington", "title": "Colman Domingo", "info": "Sing Sing" },
-        { "id": "stan", "title": "Sebastian Stan", "info": "The Apprentice" }
-      ]
-    },
-    {
-      "id": "best-actress",
-      "name": "Best Actress",
-      "nominees": [
-        { "id": "erivo", "title": "Cynthia Erivo", "info": "Wicked" },
-        { "id": "fernanda", "title": "Fernanda Torres", "info": "I'm Still Here" },
-        { "id": "madison", "title": "Mikey Madison", "info": "Anora" },
-        { "id": "moore", "title": "Demi Moore", "info": "The Substance" },
-        { "id": "saldana", "title": "Zoe Saldaña", "info": "Emilia Pérez" }
-      ]
-    },
-    {
-      "id": "best-supporting-actor",
-      "name": "Best Supporting Actor",
-      "nominees": [
-        { "id": "baz", "title": "Yura Borisov", "info": "Anora" },
-        { "id": "edgerton", "title": "Kieran Culkin", "info": "A Real Pain" },
-        { "id": "norton", "title": "Edward Norton", "info": "A Complete Unknown" },
-        { "id": "pearce", "title": "Guy Pearce", "info": "The Brutalist" },
-        { "id": "rees", "title": "Jeremy Strong", "info": "The Apprentice" }
-      ]
-    },
-    {
-      "id": "best-supporting-actress",
-      "name": "Best Supporting Actress",
-      "nominees": [
-        { "id": "grande", "title": "Ariana Grande", "info": "Wicked" },
-        { "id": "felicity", "title": "Felicity Jones", "info": "The Brutalist" },
-        { "id": "isabella", "title": "Isabella Rossellini", "info": "Conclave" },
-        { "id": "winslet", "title": "Monica Barbaro", "info": "A Complete Unknown" },
-        { "id": "gomez", "title": "Selena Gomez", "info": "Emilia Pérez" }
-      ]
-    },
-    {
-      "id": "best-original-screenplay",
-      "name": "Best Original Screenplay",
-      "nominees": [
-        { "id": "anora-sp", "title": "Anora", "info": "Sean Baker" },
-        { "id": "brutalist-sp", "title": "The Brutalist", "info": "Brady Corbet, Mona Fastvold" },
-        { "id": "real-pain-sp", "title": "A Real Pain", "info": "Jesse Eisenberg" },
-        { "id": "september-sp", "title": "September 5", "info": "Moritz Binder, Alex David, Tim Fehlbaum" },
-        { "id": "substance-sp", "title": "The Substance", "info": "Coralie Fargeat" }
-      ]
-    },
-    {
-      "id": "best-adapted-screenplay",
-      "name": "Best Adapted Screenplay",
-      "nominees": [
-        { "id": "complete-unknown-sp", "title": "A Complete Unknown", "info": "James Mangold, Jay Cocks" },
-        { "id": "conclave-sp", "title": "Conclave", "info": "Peter Straughan" },
-        { "id": "emilia-perez-sp", "title": "Emilia Pérez", "info": "Jacques Audiard" },
-        { "id": "nickel-boys-sp", "title": "Nickel Boys", "info": "RaMell Ross, Joslyn Barnes" },
-        { "id": "sing-sing-sp", "title": "Sing Sing", "info": "Clint Bentley, Greg Kwedar" }
-      ]
-    },
-    {
-      "id": "best-animated-feature",
-      "name": "Best Animated Feature Film",
-      "nominees": [
-        { "id": "flow", "title": "Flow", "info": "Gints Zilbalodis, Matīss Kaža" },
-        { "id": "inside-out-2", "title": "Inside Out 2", "info": "Kelsey Mann, Mark Nielsen" },
-        { "id": "memoir-snail", "title": "Memoir of a Snail", "info": "Adam Elliot, Liz Kearney" },
-        { "id": "wallace-gromit", "title": "Wallace & Gromit: Vengeance Most Fowl", "info": "Nick Park, Merlin Crossingham" },
-        { "id": "wild-robot", "title": "The Wild Robot", "info": "Chris Sanders, Jeff Hermann" }
-      ]
-    },
-    {
-      "id": "best-international-feature",
-      "name": "Best International Feature Film",
-      "nominees": [
-        { "id": "im-still-here-int", "title": "I'm Still Here", "info": "Brazil" },
-        { "id": "girl-needle", "title": "The Girl with the Needle", "info": "Denmark" },
-        { "id": "emilia-perez-int", "title": "Emilia Pérez", "info": "France" },
-        { "id": "seed-sacred-fig", "title": "The Seed of the Sacred Fig", "info": "Germany" },
-        { "id": "flow-int", "title": "Flow", "info": "Latvia" }
-      ]
-    },
-    {
-      "id": "best-documentary-feature",
-      "name": "Best Documentary Feature Film",
-      "nominees": [
-        { "id": "black-box-diaries", "title": "Black Box Diaries", "info": "Shiori Ito, Eric Nyari, Hanna Aqvilin" },
-        { "id": "no-other-land", "title": "No Other Land", "info": "Basel Adra, Hamdan Ballal, Yuval Abraham, Rachel Szor" },
-        { "id": "porcelain-war", "title": "Porcelain War", "info": "Brendan Bellomo, Slava Leontyev, Aniela Sidorska" },
-        { "id": "soundtrack-coup", "title": "Soundtrack to a Coup d'Etat", "info": "Johan Grimonprez, Daan Milius" },
-        { "id": "sugarcane", "title": "Sugarcane", "info": "Julian Brave NoiseCat, Emily Kassie" }
-      ]
-    },
-    {
-      "id": "best-documentary-short",
-      "name": "Best Documentary Short Film",
-      "nominees": [
-        { "id": "death-by-numbers", "title": "Death by Numbers", "info": "Kim A. Snyder, Janique L. Robillard" },
-        { "id": "i-am-ready-warden", "title": "I Am Ready, Warden", "info": "Smriti Mundhra, Maya Gnyp" },
-        { "id": "incident", "title": "Incident", "info": "Bill Morrison, Jamie Kalven" },
-        { "id": "instruments-hope", "title": "Instruments of a Beating Heart", "info": "Ema Ryan Yamazaki, Eric Nyari" },
-        { "id": "only-mail", "title": "The Only Girl in the Orchestra", "info": "Molly O'Brien" }
-      ]
-    },
-    {
-      "id": "best-live-action-short",
-      "name": "Best Live Action Short Film",
-      "nominees": [
-        { "id": "anuja", "title": "Anuja", "info": "Adam J. Graves, Suchitra Mattai" },
-        { "id": "clodagh", "title": "Clodagh", "info": "Bonnie Dempsey, Moya Cannon" },
-        { "id": "dovecote", "title": "The Man Who Could Not Remain Silent", "info": "Nebojša Slijepčević, Danijel Pek" },
-        { "id": "last-ranger", "title": "A Lien", "info": "Fisnik Maxville, Sophie Parienti" },
-        { "id": "room-occupied", "title": "Room Taken", "info": "Alex Bach Tran, Malin Andersson" }
+        { "id": "hamnet-casting", "title": "Hamnet", "info": "Nina Gold" },
+        { "id": "marty-supreme-casting", "title": "Marty Supreme", "info": "Jennifer Venditti" },
+        { "id": "one-battle-casting", "title": "One Battle After Another", "info": "Cassandra Kulukundis" },
+        { "id": "secret-agent-casting", "title": "The Secret Agent", "info": "Gabriel Domingues" },
+        { "id": "sinners-casting", "title": "Sinners", "info": "Francine Maisler" }
       ]
     },
     {
       "id": "best-animated-short",
       "name": "Best Animated Short Film",
       "nominees": [
-        { "id": "beautiful-men", "title": "Beautiful Men", "info": "Nicolas Keppens, Brecht Van Elslande" },
-        { "id": "in-shadow", "title": "In the Shadow of the Cypress", "info": "Shirin Sohani, Hossein Molayemi" },
-        { "id": "magic-candies", "title": "Magic Candies", "info": "Daisuke Nishio, Mai Fukagawa" },
-        { "id": "wander", "title": "Wander to Wonder", "info": "Nina Gantz, Stienette Bosklopper" },
-        { "id": "yuck", "title": "Yuck!", "info": "Loïc Espuche" }
+        { "id": "butterfly", "title": "Butterfly", "info": "Florence Miailhe, Ron Dyens" },
+        { "id": "forevergreen", "title": "Forevergreen", "info": "Nathan Engelhardt, Jeremy Spears" },
+        { "id": "girl-pearls", "title": "The Girl Who Cried Pearls", "info": "Chris Lavis, Maciek Szczerbowski" },
+        { "id": "retirement-plan", "title": "Retirement Plan", "info": "John Kelly, Andrew Freedman" },
+        { "id": "three-sisters", "title": "The Three Sisters", "info": "Konstantin Bronzit" }
       ]
     },
     {
-      "id": "best-original-score",
-      "name": "Best Original Score",
+      "id": "best-live-action-short",
+      "name": "Best Live Action Short Film",
       "nominees": [
-        { "id": "brutalist-score", "title": "The Brutalist", "info": "Daniel Blumberg" },
-        { "id": "conclave-score", "title": "Conclave", "info": "Volker Bertelmann" },
-        { "id": "emilia-perez-score", "title": "Emilia Pérez", "info": "Clément Ducol, Camille" },
-        { "id": "wicked-score", "title": "Wicked", "info": "Stephen Schwartz, John Powell" },
-        { "id": "wild-robot-score", "title": "The Wild Robot", "info": "Kris Bowers" }
+        { "id": "butchers-stain", "title": "Butcher's Stain", "info": "Meyer Levinson-Blount, Oron Caspi" },
+        { "id": "friend-of-dorothy", "title": "A Friend of Dorothy", "info": "Lee Knight, James Dean" },
+        { "id": "jane-austen", "title": "Jane Austen's Period Drama", "info": "Julia Aks, Steve Pinder" },
+        { "id": "the-singers", "title": "The Singers", "info": "Sam A. Davis, Jack Piatt" },
+        { "id": "two-people", "title": "Two People Exchanging Saliva", "info": "Alexandre Singh, Natalie Musteata" }
       ]
     },
     {
-      "id": "best-original-song",
-      "name": "Best Original Song",
+      "id": "best-documentary-short",
+      "name": "Best Documentary Short Film",
       "nominees": [
-        { "id": "el-mal", "title": "El Mal", "info": "Emilia Pérez - Clément Ducol, Camille, Jacques Audiard" },
-        { "id": "journey", "title": "The Journey", "info": "The Six Triple Eight - Diane Warren" },
-        { "id": "kiss-sky", "title": "Kiss the Sky", "info": "The Wild Robot - Maren Morris, Delacey, Michael Pollack, Jordan Johnson, Stefan Johnson" },
-        { "id": "like-bird", "title": "Like a Bird", "info": "Sing Sing - Abraham Alexander, Adrian Quesada" },
-        { "id": "mi-camino", "title": "Mi Camino", "info": "Emilia Pérez - Clément Ducol, Camille" }
+        { "id": "empty-rooms", "title": "All the Empty Rooms", "info": "Joshua Seftel, Conall Jones" },
+        { "id": "armed-camera", "title": "Armed Only with a Camera: The Life and Death of Brent Renaud", "info": "Craig Renaud, Juan Arredondo" },
+        { "id": "children-no-more", "title": "Children No More: Were and Are Gone", "info": "Hilla Medalia, Sheila Nevins" },
+        { "id": "devil-busy", "title": "The Devil Is Busy", "info": "Christalyn Hampton, Geeta Gandbhir" },
+        { "id": "perfectly-strangeness", "title": "Perfectly a Strangeness", "info": "Alison McAlpine" }
       ]
     },
     {
       "id": "best-sound",
       "name": "Best Sound",
       "nominees": [
-        { "id": "complete-unknown-sound", "title": "A Complete Unknown", "info": "Tod A. Maitland, Donald Sylvester, Paul Massey, David Giammarco" },
-        { "id": "dune-two-sound", "title": "Dune: Part Two", "info": "Ron Bartlett, Doug Hemphill, Gareth John, Richard King" },
-        { "id": "emilia-perez-sound", "title": "Emilia Pérez", "info": "Erwan Kerzanet, Aymeric Devoldère, Maxence Dussère" },
-        { "id": "wicked-sound", "title": "Wicked", "info": "Simon Hayes, Nancy Nugent Title, Jack Dolman, Andy Nelson" },
-        { "id": "wild-robot-sound", "title": "The Wild Robot", "info": "Randy Thom, Brian Chumney" }
-      ]
-    },
-    {
-      "id": "best-production-design",
-      "name": "Best Production Design",
-      "nominees": [
-        { "id": "brutalist-prod", "title": "The Brutalist", "info": "Judy Becker, Patricia Cuccia" },
-        { "id": "conclave-prod", "title": "Conclave", "info": "Suzie Davies, Cynthia Sleiter" },
-        { "id": "dune-two-prod", "title": "Dune: Part Two", "info": "Patrice Vermette, Shane Vieau" },
-        { "id": "nosferatu-prod", "title": "Nosferatu", "info": "Craig Lathrop, Beatrice Brentnerová" },
-        { "id": "wicked-prod", "title": "Wicked", "info": "Nathan Crowley, Lee Sandales" }
-      ]
-    },
-    {
-      "id": "best-cinematography",
-      "name": "Best Cinematography",
-      "nominees": [
-        { "id": "brutalist-cin", "title": "The Brutalist", "info": "Lol Crawley" },
-        { "id": "dune-two-cin", "title": "Dune: Part Two", "info": "Greig Fraser" },
-        { "id": "emilia-perez-cin", "title": "Emilia Pérez", "info": "Paul Guilhaume" },
-        { "id": "maria-cin", "title": "Maria", "info": "Ed Lachman" },
-        { "id": "nosferatu-cin", "title": "Nosferatu", "info": "Jarin Blaschke" }
+        { "id": "f1-sound", "title": "F1", "info": "Gareth John, Al Nelson, Gwendolyn Yates Whittle, Gary A. Rizzo, Juan Peralta" },
+        { "id": "frankenstein-sound", "title": "Frankenstein", "info": "Greg Chapman, Nathan Robitaille, Nelson Ferreira, Christian Cooke, Brad Zoern" },
+        { "id": "one-battle-sound", "title": "One Battle After Another", "info": "José Antonio García, Christopher Scarabosio, Tony Villaflor" },
+        { "id": "sinners-sound", "title": "Sinners", "info": "Chris Welcker, Benjamin A. Burtt, Felipe Pacheco, Brandon Proctor, Steve Boeddeker" },
+        { "id": "sirat-sound", "title": "Sirāt", "info": "Amanda Villavieja, Laia Casanovas, Yasmina Praderas" }
       ]
     },
     {
       "id": "best-makeup-hairstyling",
       "name": "Best Makeup and Hairstyling",
       "nominees": [
-        { "id": "different-man-makeup", "title": "A Different Man", "info": "Mike Marino, David Presto, Crystal Jurado" },
-        { "id": "emilia-perez-makeup", "title": "Emilia Pérez", "info": "Julia Floch-Carbonel, Emmanuel Janvier, Jean-Christophe Spadaccini" },
-        { "id": "nosferatu-makeup", "title": "Nosferatu", "info": "David White, Traci Loader, Suzanne Stokes-Munton" },
-        { "id": "substance-makeup", "title": "The Substance", "info": "Pierre-Olivier Persin, Stéphanie Guillon, Marilyne Scarselli" },
-        { "id": "wicked-makeup", "title": "Wicked", "info": "Frances Hannon, Laura Blount, Sarah Nuth" }
+        { "id": "frankenstein-makeup", "title": "Frankenstein", "info": "Mike Hill, Jordan Samuel, Cliona Furey" },
+        { "id": "kokuho-makeup", "title": "Kokuho", "info": "Kyoko Toyokawa, Naomi Hibino, Tadashi Nishimatsu" },
+        { "id": "sinners-makeup", "title": "Sinners", "info": "Ken Diaz, Mike Fontaine, Shunika Terry" },
+        { "id": "smashing-machine-makeup", "title": "The Smashing Machine", "info": "Kazu Hiro, Glen Griffin, Bjoern Rehbein" },
+        { "id": "ugly-stepsister-makeup", "title": "The Ugly Stepsister", "info": "Thomas Foldberg, Anne Cathrine Sauerberg" }
       ]
     },
     {
       "id": "best-costume-design",
       "name": "Best Costume Design",
       "nominees": [
-        { "id": "complete-unknown-costume", "title": "A Complete Unknown", "info": "Arianne Phillips" },
-        { "id": "conclave-costume", "title": "Conclave", "info": "Lisy Christl" },
-        { "id": "gladiator-costume", "title": "Gladiator II", "info": "Janty Yates, Dave Crossman" },
-        { "id": "nosferatu-costume", "title": "Nosferatu", "info": "Linda Muir" },
-        { "id": "wicked-costume", "title": "Wicked", "info": "Paul Tazewell" }
+        { "id": "avatar-costume", "title": "Avatar: Fire and Ash", "info": "Deborah L. Scott" },
+        { "id": "frankenstein-costume", "title": "Frankenstein", "info": "Kate Hawley" },
+        { "id": "hamnet-costume", "title": "Hamnet", "info": "Malgosia Turzanska" },
+        { "id": "marty-supreme-costume", "title": "Marty Supreme", "info": "Miyako Bellizzi" },
+        { "id": "sinners-costume", "title": "Sinners", "info": "Ruth E. Carter" }
       ]
     },
     {
-      "id": "best-film-editing",
-      "name": "Best Film Editing",
+      "id": "best-supporting-actor",
+      "name": "Best Supporting Actor",
       "nominees": [
-        { "id": "anora-edit", "title": "Anora", "info": "Sean Baker" },
-        { "id": "brutalist-edit", "title": "The Brutalist", "info": "Dávid Jancsó" },
-        { "id": "conclave-edit", "title": "Conclave", "info": "Nick Emerson" },
-        { "id": "emilia-perez-edit", "title": "Emilia Pérez", "info": "Juliette Welfling" },
-        { "id": "wicked-edit", "title": "Wicked", "info": "Myron Kerstein" }
+        { "id": "del-toro", "title": "Benicio del Toro", "info": "One Battle After Another" },
+        { "id": "elordi", "title": "Jacob Elordi", "info": "Frankenstein" },
+        { "id": "lindo", "title": "Delroy Lindo", "info": "Sinners" },
+        { "id": "penn", "title": "Sean Penn", "info": "One Battle After Another" },
+        { "id": "skarsgard", "title": "Stellan Skarsgård", "info": "Sentimental Value" }
+      ]
+    },
+    {
+      "id": "best-production-design",
+      "name": "Best Production Design",
+      "nominees": [
+        { "id": "frankenstein-prod", "title": "Frankenstein", "info": "Tamara Deverell; Shane Vieau" },
+        { "id": "hamnet-prod", "title": "Hamnet", "info": "Fiona Crombie; Alice Felton" },
+        { "id": "marty-supreme-prod", "title": "Marty Supreme", "info": "Jack Fisk; Adam Willis" },
+        { "id": "one-battle-prod", "title": "One Battle After Another", "info": "Florencia Martin; Anthony Carlino" },
+        { "id": "sinners-prod", "title": "Sinners", "info": "Hannah Beachler; Monique Champagne" }
       ]
     },
     {
       "id": "best-visual-effects",
       "name": "Best Visual Effects",
       "nominees": [
-        { "id": "alien-vfx", "title": "Alien: Romulus", "info": "Eric Barba, Nelson Sepulveda, Daniel Macarin, Shane Mahan" },
-        { "id": "better-man-vfx", "title": "Better Man", "info": "Luke Millar, David Clayton, Keith Herft, Peter Stubbs" },
-        { "id": "dune-two-vfx", "title": "Dune: Part Two", "info": "Paul Lambert, Stephen James, Rhys Salcombe, Gerd Nefzer" },
-        { "id": "kingdom-planet-apes-vfx", "title": "Kingdom of the Planet of the Apes", "info": "Erik Winquist, Stephen Unterfranz, Paul Story, Rodney Burke" },
-        { "id": "wicked-vfx", "title": "Wicked", "info": "Pablo Helman, Jonathan Fawkner, David Shirk, Paul Corbould" }
+        { "id": "avatar-vfx", "title": "Avatar: Fire and Ash", "info": "Joe Letteri, Richard Baneham, Eric Saindon, Daniel Barrett" },
+        { "id": "f1-vfx", "title": "F1", "info": "Ryan Tudhope, Nicolas Chevallier, Robert Harrington, Keith Dawson" },
+        { "id": "jurassic-vfx", "title": "Jurassic World Rebirth", "info": "David Vickery, Stephen Aplin, Charmaine Chan, Neil Corbould" },
+        { "id": "lost-bus-vfx", "title": "The Lost Bus", "info": "Charlie Noble, David Zaretti, Russell Bowen, Brandon K. McLaughlin" },
+        { "id": "sinners-vfx", "title": "Sinners", "info": "Michael Ralla, Espen Nordahl, Guido Wolter, Donnie Dean" }
+      ]
+    },
+    {
+      "id": "best-animated-feature",
+      "name": "Best Animated Feature Film",
+      "nominees": [
+        { "id": "arco", "title": "Arco", "info": "Ugo Bienvenu, Félix de Givry, Sophie Mas, Natalie Portman" },
+        { "id": "elio", "title": "Elio", "info": "Madeline Sharafian, Domee Shi, Adrian Molina, Mary Alice Drumm" },
+        { "id": "kpop-demon-hunters", "title": "KPop Demon Hunters", "info": "Maggie Kang, Chris Appelhans, Michelle L.M. Wong" },
+        { "id": "little-amelie", "title": "Little Amélie or the Character of Rain", "info": "Maïlys Vallade, Liane-Cho Han, Nidia Santiago, Henri Magalon" },
+        { "id": "zootopia-2", "title": "Zootopia 2", "info": "Jared Bush, Byron Howard, Yvett Merino" }
+      ]
+    },
+    {
+      "id": "best-film-editing",
+      "name": "Best Film Editing",
+      "nominees": [
+        { "id": "f1-edit", "title": "F1", "info": "Stephen Mirrione" },
+        { "id": "marty-supreme-edit", "title": "Marty Supreme", "info": "Ronald Bronstein, Josh Safdie" },
+        { "id": "one-battle-edit", "title": "One Battle After Another", "info": "Andy Jurgensen" },
+        { "id": "sentimental-value-edit", "title": "Sentimental Value", "info": "Olivier Bugge Coutté" },
+        { "id": "sinners-edit", "title": "Sinners", "info": "Michael P. Shawver" }
+      ]
+    },
+    {
+      "id": "best-cinematography",
+      "name": "Best Cinematography",
+      "nominees": [
+        { "id": "frankenstein-cin", "title": "Frankenstein", "info": "Dan Laustsen" },
+        { "id": "marty-supreme-cin", "title": "Marty Supreme", "info": "Darius Khondji" },
+        { "id": "one-battle-cin", "title": "One Battle After Another", "info": "Michael Bauman" },
+        { "id": "sinners-cin", "title": "Sinners", "info": "Autumn Durald Arkapaw" },
+        { "id": "train-dreams-cin", "title": "Train Dreams", "info": "Adolpho Veloso" }
+      ]
+    },
+    {
+      "id": "best-original-score",
+      "name": "Best Original Score",
+      "nominees": [
+        { "id": "bugonia-score", "title": "Bugonia", "info": "Jerskin Fendrix" },
+        { "id": "frankenstein-score", "title": "Frankenstein", "info": "Alexandre Desplat" },
+        { "id": "hamnet-score", "title": "Hamnet", "info": "Max Richter" },
+        { "id": "one-battle-score", "title": "One Battle After Another", "info": "Jonny Greenwood" },
+        { "id": "sinners-score", "title": "Sinners", "info": "Ludwig Göransson" }
+      ]
+    },
+    {
+      "id": "best-supporting-actress",
+      "name": "Best Supporting Actress",
+      "nominees": [
+        { "id": "fanning", "title": "Elle Fanning", "info": "Sentimental Value" },
+        { "id": "lilleaas", "title": "Inga Ibsdotter Lilleaas", "info": "Sentimental Value" },
+        { "id": "madigan", "title": "Amy Madigan", "info": "Weapons" },
+        { "id": "mosaku", "title": "Wunmi Mosaku", "info": "Sinners" },
+        { "id": "taylor", "title": "Teyana Taylor", "info": "One Battle After Another" }
+      ]
+    },
+    {
+      "id": "best-international-feature",
+      "name": "Best International Feature Film",
+      "nominees": [
+        { "id": "secret-agent-int", "title": "The Secret Agent", "info": "Brazil" },
+        { "id": "accident-int", "title": "It Was Just an Accident", "info": "France" },
+        { "id": "sentimental-value-int", "title": "Sentimental Value", "info": "Norway" },
+        { "id": "sirat-int", "title": "Sirāt", "info": "Spain" },
+        { "id": "voice-hind-int", "title": "The Voice of Hind Rajab", "info": "Tunisia" }
+      ]
+    },
+    {
+      "id": "best-documentary-feature",
+      "name": "Best Documentary Feature Film",
+      "nominees": [
+        { "id": "alabama-solution", "title": "The Alabama Solution", "info": "Andrew Jarecki, Charlotte Kaufman" },
+        { "id": "come-see-me", "title": "Come See Me in the Good Light", "info": "Ryan White, Jessica Hargrave, Tig Notaro, Stef Willen" },
+        { "id": "cutting-rocks", "title": "Cutting Through Rocks", "info": "Sara Khaki, Mohammadreza Eyni" },
+        { "id": "mr-nobody", "title": "Mr. Nobody Against Putin", "info": "David Borenstein, Pavel Talankin, Helle Faber" },
+        { "id": "perfect-neighbor", "title": "The Perfect Neighbor", "info": "Geeta Gandbhir, Alisa Payne, Nikon Kwantu, Sam Bisbee" }
+      ]
+    },
+    {
+      "id": "best-original-song",
+      "name": "Best Original Song",
+      "nominees": [
+        { "id": "dear-me", "title": "Dear Me", "info": "Diane Warren: Relentless — Diane Warren" },
+        { "id": "golden", "title": "Golden", "info": "KPop Demon Hunters — Kim Eun-jae, Mark Sonnenblick, Teddy Park, and others" },
+        { "id": "i-lied-to-you", "title": "I Lied to You", "info": "Sinners — Raphael Saadiq, Ludwig Göransson" },
+        { "id": "sweet-dreams-joy", "title": "Sweet Dreams of Joy", "info": "Viva Verdi! — Nicholas Pike" },
+        { "id": "train-dreams-song", "title": "Train Dreams", "info": "Train Dreams — Nick Cave, Bryce Dessner" }
+      ]
+    },
+    {
+      "id": "best-original-screenplay",
+      "name": "Best Original Screenplay",
+      "nominees": [
+        { "id": "blue-moon-sp", "title": "Blue Moon", "info": "Robert Kaplow" },
+        { "id": "accident-sp", "title": "It Was Just an Accident", "info": "Jafar Panahi, Nader Saïvar, Shadmehr Rastin, Mehdi Mahmoudian" },
+        { "id": "marty-supreme-sp", "title": "Marty Supreme", "info": "Ronald Bronstein, Josh Safdie" },
+        { "id": "sentimental-value-sp", "title": "Sentimental Value", "info": "Eskil Vogt, Joachim Trier" },
+        { "id": "sinners-sp", "title": "Sinners", "info": "Ryan Coogler" }
+      ]
+    },
+    {
+      "id": "best-adapted-screenplay",
+      "name": "Best Adapted Screenplay",
+      "nominees": [
+        { "id": "bugonia-sp", "title": "Bugonia", "info": "Will Tracy" },
+        { "id": "frankenstein-sp", "title": "Frankenstein", "info": "Guillermo del Toro" },
+        { "id": "hamnet-sp", "title": "Hamnet", "info": "Chloé Zhao, Maggie O'Farrell" },
+        { "id": "one-battle-sp", "title": "One Battle After Another", "info": "Paul Thomas Anderson" },
+        { "id": "train-dreams-sp", "title": "Train Dreams", "info": "Clint Bentley, Greg Kwedar" }
+      ]
+    },
+    {
+      "id": "best-actress",
+      "name": "Best Actress",
+      "nominees": [
+        { "id": "buckley", "title": "Jessie Buckley", "info": "Hamnet" },
+        { "id": "byrne", "title": "Rose Byrne", "info": "If I Had Legs I'd Kick You" },
+        { "id": "hudson", "title": "Kate Hudson", "info": "Song Sung Blue" },
+        { "id": "reinsve", "title": "Renate Reinsve", "info": "Sentimental Value" },
+        { "id": "stone", "title": "Emma Stone", "info": "Bugonia" }
+      ]
+    },
+    {
+      "id": "best-actor",
+      "name": "Best Actor",
+      "nominees": [
+        { "id": "chalamet", "title": "Timothée Chalamet", "info": "Marty Supreme" },
+        { "id": "dicaprio", "title": "Leonardo DiCaprio", "info": "One Battle After Another" },
+        { "id": "hawke", "title": "Ethan Hawke", "info": "Blue Moon" },
+        { "id": "jordan", "title": "Michael B. Jordan", "info": "Sinners" },
+        { "id": "moura", "title": "Wagner Moura", "info": "The Secret Agent" }
+      ]
+    },
+    {
+      "id": "best-director",
+      "name": "Best Director",
+      "nominees": [
+        { "id": "anderson", "title": "Paul Thomas Anderson", "info": "One Battle After Another" },
+        { "id": "coogler", "title": "Ryan Coogler", "info": "Sinners" },
+        { "id": "safdie", "title": "Josh Safdie", "info": "Marty Supreme" },
+        { "id": "trier", "title": "Joachim Trier", "info": "Sentimental Value" },
+        { "id": "zhao", "title": "Chloé Zhao", "info": "Hamnet" }
+      ]
+    },
+    {
+      "id": "best-picture",
+      "name": "Best Picture",
+      "nominees": [
+        { "id": "bugonia", "title": "Bugonia", "info": "Ed Guiney, Andrew Lowe, Yorgos Lanthimos, Emma Stone, Lars Knudsen" },
+        { "id": "f1", "title": "F1", "info": "Chad Oman, Brad Pitt, Dede Gardner, Jeremy Kleiner, Joseph Kosinski, Jerry Bruckheimer" },
+        { "id": "frankenstein", "title": "Frankenstein", "info": "Guillermo del Toro, J. Miles Dale, Scott Stuber" },
+        { "id": "hamnet", "title": "Hamnet", "info": "Liza Marshall, Pippa Harris, Nicolas Gonda, Steven Spielberg, Sam Mendes" },
+        { "id": "marty-supreme", "title": "Marty Supreme", "info": "Eli Bush, Ronald Bronstein, Josh Safdie, Anthony Katagas, Timothée Chalamet" },
+        { "id": "one-battle", "title": "One Battle After Another", "info": "Adam Somner, Sara Murphy, Paul Thomas Anderson" },
+        { "id": "secret-agent", "title": "The Secret Agent", "info": "Emilie Lesclaux" },
+        { "id": "sentimental-value", "title": "Sentimental Value", "info": "Maria Ekerhovd, Andrea Berentsen Ottmar" },
+        { "id": "sinners", "title": "Sinners", "info": "Zinzi Coogler, Sev Ohanian, Ryan Coogler" },
+        { "id": "train-dreams", "title": "Train Dreams", "info": "Marissa McMahon, Teddy Schwarzman, Will Janowitz, Ashley Schlaifer, Michael Heimler" }
       ]
     }
   ]

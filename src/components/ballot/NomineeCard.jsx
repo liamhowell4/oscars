@@ -4,47 +4,48 @@ export default function NomineeCard({ nominee, isSelected, isWinner, onSelect, d
       onClick={() => !disabled && onSelect(nominee.id)}
       disabled={disabled}
       className={`
-        w-full p-4 text-left transition-all duration-300 border
-        ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}
+        group w-full p-4 text-left transition-all duration-300 border rounded-lg relative overflow-hidden
+        ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}
         ${isSelected
-          ? 'nominee-selected border-gold-light'
-          : 'border-cream/20 hover:border-gold/50'
+          ? 'nominee-selected border-gold'
+          : 'border-cream/10 hover:border-gold/40 hover:bg-white/[0.02]'
         }
-        ${isWinner ? 'ring-2 ring-gold-light' : ''}
+        ${isWinner ? 'ring-1 ring-gold-light ring-offset-1 ring-offset-black' : ''}
       `}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <h3 className={`font-display text-lg ${isSelected ? 'text-gold-light' : 'text-cream'}`}>
-            {nominee.title}
-          </h3>
-          <p className="text-cream/60 text-sm mt-1">{nominee.info}</p>
-        </div>
+      <div>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <h3 className={`font-display text-lg leading-snug transition-colors duration-300 ${
+              isSelected ? 'text-gold-light' : 'text-cream/90 group-hover:text-cream'
+            }`}>
+              {nominee.title}
+            </h3>
+            <p className={`text-sm mt-1 transition-colors duration-300 ${
+              isSelected ? 'text-cream/50' : 'text-cream/35 group-hover:text-cream/45'
+            }`}>
+              {nominee.info}
+            </p>
+          </div>
 
-        {/* Selection indicator */}
-        <div className={`
-          w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0
-          transition-all duration-300
-          ${isSelected
-            ? 'border-gold-light bg-gold'
-            : 'border-cream/30'
-          }
-        `}>
-          {isSelected && (
-            <svg className="w-4 h-4 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-            </svg>
+          {/* Selection checkmark */}
+          {isSelected && !isWinner && (
+            <div className="w-5 h-5 border border-gold bg-gold/20 rounded flex items-center justify-center shrink-0 mt-0.5">
+              <svg className="w-3 h-3 text-gold-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
           )}
         </div>
-      </div>
 
-      {/* Winner badge */}
-      {isWinner && (
-        <div className="mt-3 inline-flex items-center gap-1 text-gold-light text-sm">
-          <span>★</span>
-          <span className="uppercase tracking-wider text-xs">Winner</span>
-        </div>
-      )}
+        {/* Winner badge */}
+        {isWinner && (
+          <div className="mt-3 inline-flex items-center gap-1.5 text-gold-light">
+            <span className="text-xs">★</span>
+            <span className="uppercase tracking-[0.2em] text-[10px] font-body font-semibold">Winner</span>
+          </div>
+        )}
+      </div>
     </button>
   );
 }
