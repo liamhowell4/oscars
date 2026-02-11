@@ -3,6 +3,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
   onSnapshot,
   serverTimestamp,
 } from 'firebase/firestore';
@@ -63,6 +64,9 @@ export function BallotProvider({ children }) {
           const ballotPicks = snapshot.data().picks || {};
           setPicks(ballotPicks);
           picksRef.current = ballotPicks;
+          // Sync completion status to user doc for public visibility
+          const isComplete = Object.keys(ballotPicks).length >= nominees.categories.length;
+          updateDoc(doc(db, 'users', user.uid), { ballotComplete: isComplete }).catch(() => {});
         }
       })
       .catch((error) => {
@@ -101,6 +105,9 @@ export function BallotProvider({ children }) {
         },
         { merge: true }
       );
+      // Sync completion status to user doc for public visibility
+      const isComplete = Object.keys(newPicks).length >= nominees.categories.length;
+      updateDoc(doc(db, 'users', user.uid), { ballotComplete: isComplete }).catch(() => {});
     } catch (error) {
       console.error('Error saving pick:', error);
     }

@@ -17,46 +17,60 @@ export default function Leaderboard() {
     const fetchLeaderboard = async () => {
       setLoading(true);
       try {
-        const [ballotsSnap, usersSnap] = await Promise.all([
-          getDocs(collection(db, 'ballots')),
-          getDocs(collection(db, 'users')),
-        ]);
-
+        const usersSnap = await getDocs(collection(db, 'users'));
         const userMap = {};
         usersSnap.forEach((doc) => {
           userMap[doc.id] = doc.data();
         });
 
-        const rawEntries = ballotsSnap.docs.map((doc) => {
-          const data = doc.data();
-          const userData = userMap[data.userId] || {};
-          return {
-            docId: doc.id,
-            userId: data.userId,
-            picks: data.picks || {},
-            score: calculateScore(data.picks || {}, winners),
-            updatedAt: data.updatedAt,
-            displayName: userData.displayName || 'Anonymous',
-            photoURL: userData.photoURL || null,
-          };
-        });
+        if (config.ceremonyStarted) {
+          const ballotsSnap = await getDocs(collection(db, 'ballots'));
 
-        rawEntries.sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
-          const aTime = a.updatedAt?.toMillis?.() ?? a.updatedAt ?? Infinity;
-          const bTime = b.updatedAt?.toMillis?.() ?? b.updatedAt ?? Infinity;
-          return aTime - bTime;
-        });
+          const rawEntries = ballotsSnap.docs.map((doc) => {
+            const data = doc.data();
+            const userData = userMap[data.userId] || {};
+            return {
+              userId: data.userId,
+              picks: data.picks || {},
+              score: calculateScore(data.picks || {}, winners),
+              updatedAt: data.updatedAt,
+              displayName: userData.displayName || 'Anonymous',
+              photoURL: userData.photoURL || null,
+              ballotComplete: Object.keys(data.picks || {}).length >= categories.length,
+            };
+          });
 
-        let currentRank = 1;
-        const ranked = rawEntries.map((entry, i) => {
-          if (i > 0 && entry.score < rawEntries[i - 1].score) {
-            currentRank = i + 1;
-          }
-          return { ...entry, rank: currentRank };
-        });
+          rawEntries.sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            const aTime = a.updatedAt?.toMillis?.() ?? a.updatedAt ?? Infinity;
+            const bTime = b.updatedAt?.toMillis?.() ?? b.updatedAt ?? Infinity;
+            return aTime - bTime;
+          });
 
-        setEntries(ranked);
+          let currentRank = 1;
+          const ranked = rawEntries.map((entry, i) => {
+            if (i > 0 && entry.score < rawEntries[i - 1].score) {
+              currentRank = i + 1;
+            }
+            return { ...entry, rank: currentRank };
+          });
+
+          setEntries(ranked);
+        } else {
+          const allEntries = Object.entries(userMap).map(([uid, data]) => ({
+            userId: uid,
+            displayName: data.displayName || 'Anonymous',
+            photoURL: data.photoURL || null,
+            ballotComplete: data.ballotComplete || false,
+          }));
+
+          allEntries.sort((a, b) => {
+            if (a.ballotComplete !== b.ballotComplete) return (b.ballotComplete ? 1 : 0) - (a.ballotComplete ? 1 : 0);
+            return a.displayName.localeCompare(b.displayName);
+          });
+
+          setEntries(allEntries);
+        }
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
       }
@@ -64,7 +78,7 @@ export default function Leaderboard() {
     };
 
     fetchLeaderboard();
-  }, [winners]);
+  }, [winners, config.ceremonyStarted]);
 
   const announcedCount = Object.keys(winners).length;
 
@@ -103,7 +117,7 @@ export default function Leaderboard() {
       {/* Header */}
       <div className="text-center mb-8 animate-fade-in-up">
         <div className="deco-divider mb-4">
-          <span className="text-gold/50 text-xs">★</span>
+          <span className="text-gold/50 text-xs">&#9733;</span>
         </div>
         <h1 className="text-4xl font-display text-gold-gradient">
           Leaderboard
@@ -170,13 +184,72 @@ export default function Leaderboard() {
           ) : entries.length === 0 ? (
             <div className="card-deco text-center py-16">
               <p className="text-cream/40 font-body">
-                No ballots submitted yet.
+                {config.ceremonyStarted ? 'No ballots submitted yet.' : 'No users have signed up yet.'}
               </p>
             </div>
           ) : (
             <div className="space-y-1">
               {entries.map((entry, i) => {
                 const isCurrentUser = user && entry.userId === user.uid;
+
+                if (!config.ceremonyStarted) {
+                  return (
+                    <div
+                      key={entry.userId}
+                      className="animate-fade-in-up"
+                      style={{ animationDelay: `${Math.min(i * 50, 500)}ms` }}
+                    >
+                      <div
+                        className={`flex items-center gap-4 px-4 py-3 ${
+                          isCurrentUser
+                            ? 'border-l-2 border-gold bg-gold/[0.04]'
+                            : 'border-l-2 border-transparent'
+                        }`}
+                      >
+                        {/* Avatar */}
+                        {entry.photoURL ? (
+                          <img
+                            src={entry.photoURL}
+                            alt={entry.displayName}
+                            className="w-9 h-9 rounded-full shrink-0 object-cover border border-cream/10"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div className="w-9 h-9 rounded-full bg-gold/10 flex items-center justify-center text-gold/60 font-bold text-xs shrink-0 border border-gold/10">
+                            {getInitials(entry.displayName)}
+                          </div>
+                        )}
+
+                        {/* Name */}
+                        <div className="flex-1 min-w-0">
+                          <p className={`font-body text-sm truncate ${
+                            isCurrentUser ? 'text-gold font-semibold' : 'text-cream/80'
+                          }`}>
+                            {entry.displayName}
+                            {isCurrentUser && (
+                              <span className="text-cream/25 text-xs ml-2 font-normal">(you)</span>
+                            )}
+                          </p>
+                        </div>
+
+                        {/* Completion badge */}
+                        {entry.ballotComplete ? (
+                          <span className="flex items-center gap-1.5 text-[11px] font-body text-green-400/80 bg-green-500/10 px-2.5 py-1 rounded-full shrink-0 border border-green-500/10">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                              <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+                            </svg>
+                            Complete
+                          </span>
+                        ) : (
+                          <span className="text-[11px] font-body text-cream/25 shrink-0 uppercase tracking-wider">
+                            In progress
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                }
+
                 const isExpanded = expandedUserId === entry.userId;
                 const breakdown = isExpanded
                   ? getScoreBreakdown(entry.picks, winners, categories)
@@ -185,7 +258,7 @@ export default function Leaderboard() {
 
                 return (
                   <div
-                    key={entry.docId}
+                    key={entry.userId}
                     className="animate-fade-in-up"
                     style={{ animationDelay: `${Math.min(i * 50, 500)}ms` }}
                   >
@@ -195,11 +268,7 @@ export default function Leaderboard() {
                         isCurrentUser
                           ? 'border-l-2 border-gold bg-gold/[0.04]'
                           : 'border-l-2 border-transparent'
-                      } ${
-                        config.ceremonyStarted
-                          ? 'cursor-pointer hover:bg-white/[0.03]'
-                          : ''
-                      }`}
+                      } cursor-pointer hover:bg-white/[0.03]`}
                     >
                       {/* Rank */}
                       <div className={`w-7 h-7 rounded flex items-center justify-center text-xs font-bold shrink-0 ${rank.bg}`}>
@@ -232,6 +301,15 @@ export default function Leaderboard() {
                         </p>
                       </div>
 
+                      {/* Completion indicator */}
+                      {entry.ballotComplete && (
+                        <span className="shrink-0 w-5 h-5 rounded-full bg-green-500/15 flex items-center justify-center" title="Ballot complete">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-green-400/70">
+                            <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+                          </svg>
+                        </span>
+                      )}
+
                       {/* Score */}
                       <div className="text-right shrink-0">
                         <span className="text-gold font-display text-lg font-bold">
@@ -245,18 +323,16 @@ export default function Leaderboard() {
                       </div>
 
                       {/* Expand indicator */}
-                      {config.ceremonyStarted && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          className={`w-4 h-4 text-cream/15 shrink-0 transition-transform duration-300 ${
-                            isExpanded ? 'rotate-180' : ''
-                          }`}
-                        >
-                          <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
-                        </svg>
-                      )}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className={`w-4 h-4 text-cream/15 shrink-0 transition-transform duration-300 ${
+                          isExpanded ? 'rotate-180' : ''
+                        }`}
+                      >
+                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                      </svg>
                     </div>
 
                     {/* Score breakdown */}

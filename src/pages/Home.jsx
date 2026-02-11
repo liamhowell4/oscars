@@ -5,6 +5,8 @@ import { useBallot } from '../contexts/BallotContext';
 import GoogleSignIn from '../components/auth/GoogleSignIn';
 import ArtDecoFrame from '../components/layout/ArtDecoFrame';
 import { formatTimeRemaining } from '../lib/scoring';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 const features = [
   {
@@ -100,6 +102,7 @@ function AuthenticatedHome() {
   } = useBallot();
 
   const [countdown, setCountdown] = useState('');
+  const [communityStats, setCommunityStats] = useState({ total: 0, complete: 0 });
 
   const hasLockTime = config?.lockTime && !isLocked;
 
@@ -117,6 +120,19 @@ function AuthenticatedHome() {
     const interval = setInterval(updateCountdown, 60000);
     return () => clearInterval(interval);
   }, [hasLockTime, config?.lockTime]);
+
+  useEffect(() => {
+    if (!db) return;
+    getDocs(collection(db, 'users')).then((snap) => {
+      let total = 0;
+      let complete = 0;
+      snap.forEach((d) => {
+        total++;
+        if (d.data().ballotComplete) complete++;
+      });
+      setCommunityStats({ total, complete });
+    }).catch(() => {});
+  }, []);
 
   const progressPercent =
     totalCategories > 0
@@ -180,6 +196,19 @@ function AuthenticatedHome() {
             </h2>
             <p className="text-gold-gradient font-display text-3xl font-bold">
               {countdown}
+            </p>
+          </div>
+        )}
+
+        {/* Community Stats */}
+        {communityStats.total > 0 && (
+          <div className="card-deco animate-fade-in-up delay-4">
+            <h2 className="text-gold/80 font-display text-lg mb-4">Community</h2>
+            <p className="text-gold-gradient font-display text-3xl font-bold mb-1">
+              {communityStats.complete} <span className="text-cream/20 text-lg font-body">of</span> {communityStats.total}
+            </p>
+            <p className="text-cream/30 text-sm font-body">
+              ballots complete
             </p>
           </div>
         )}
