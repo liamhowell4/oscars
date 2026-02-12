@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBallot } from '../contexts/BallotContext';
 
@@ -34,11 +34,17 @@ export default function Films() {
     return map;
   }, [categories]);
 
+  const [sortBy, setSortBy] = useState('noms'); // 'alpha' | 'noms'
+
   const sortedFilms = useMemo(() => {
-    return Object.entries(filmMap)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([name, noms]) => ({ name, noms }));
-  }, [filmMap]);
+    const films = Object.entries(filmMap).map(([name, noms]) => ({ name, noms }));
+    if (sortBy === 'noms') {
+      films.sort((a, b) => b.noms.length - a.noms.length || a.name.localeCompare(b.name));
+    } else {
+      films.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return films;
+  }, [filmMap, sortBy]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -48,9 +54,27 @@ export default function Films() {
           <span className="text-gold/50 text-xs">★</span>
         </div>
         <h2 className="text-4xl font-display text-gold-gradient mb-3">Nominated Films</h2>
-        <p className="text-cream/40 font-body text-sm">
+        <p className="text-cream/40 font-body text-sm mb-6">
           {sortedFilms.length} films across {categories.length} categories
         </p>
+        <div className="inline-flex border border-gold/20 rounded-md overflow-hidden">
+          <button
+            onClick={() => setSortBy('noms')}
+            className={`px-4 py-2 text-xs uppercase tracking-wider font-body transition-colors ${
+              sortBy === 'noms' ? 'bg-gold/15 text-gold-light' : 'text-cream/40 hover:text-cream/70'
+            }`}
+          >
+            Most Nominated
+          </button>
+          <button
+            onClick={() => setSortBy('alpha')}
+            className={`px-4 py-2 text-xs uppercase tracking-wider font-body transition-colors border-l border-gold/20 ${
+              sortBy === 'alpha' ? 'bg-gold/15 text-gold-light' : 'text-cream/40 hover:text-cream/70'
+            }`}
+          >
+            A–Z
+          </button>
+        </div>
       </div>
 
       {/* Film Grid */}
