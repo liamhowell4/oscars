@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useBallot } from '../contexts/BallotContext';
 import CategoryCard from '../components/ballot/CategoryCard';
 import ProgressBar from '../components/ballot/ProgressBar';
@@ -21,7 +21,15 @@ export default function Ballot() {
     completedCategories,
   } = useBallot();
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [searchParams] = useSearchParams();
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      const idx = categories.findIndex(c => c.id === categoryParam);
+      if (idx >= 0) return idx;
+    }
+    return 0;
+  });
   const [showReview, setShowReview] = useState(false);
   const [timerTick, setTimerTick] = useState(0);
 

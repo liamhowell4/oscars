@@ -225,8 +225,8 @@ function AuthenticatedHome() {
             <Link to="/leaderboard" className="btn-outline inline-block text-xs">
               Leaderboard
             </Link>
-            <Link to="/groups" className="btn-outline inline-block text-xs">
-              Groups
+            <Link to="/films" className="btn-outline inline-block text-xs">
+              Films
             </Link>
           </div>
         </ArtDecoFrame>

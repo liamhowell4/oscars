@@ -10,6 +10,7 @@ export default function Header() {
   const navLinks = [
     { path: '/', label: 'Home' },
     { path: '/ballot', label: 'Ballot' },
+    { path: '/films', label: 'Films' },
     { path: '/leaderboard', label: 'Leaderboard' },
     { path: '/groups', label: 'Groups' },
   ];
