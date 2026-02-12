@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Ballot from './pages/Ballot'
 import Leaderboard from './pages/Leaderboard'
 import Admin from './pages/Admin'
+import Films from './pages/Films'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/ballot" element={<ProtectedRoute><Ballot /></ProtectedRoute>} />
           <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+          <Route path="/films" element={<ProtectedRoute><Films /></ProtectedRoute>} />
           <Route path="/groups" element={
             <ProtectedRoute>
               <div className="max-w-4xl mx-auto px-4 py-20 text-center">
