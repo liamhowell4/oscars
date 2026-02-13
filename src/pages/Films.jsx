@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBallot } from '../contexts/BallotContext';
+import trailers from '../data/trailers.json';
+import TrailerModal from '../components/ui/TrailerModal';
 
 const ACTING_CATEGORIES = ['best-actor', 'best-actress', 'best-supporting-actor', 'best-supporting-actress'];
 const DIRECTOR_CATEGORY = 'best-director';
@@ -35,6 +37,7 @@ export default function Films() {
   }, [categories]);
 
   const [sortBy, setSortBy] = useState('noms'); // 'alpha' | 'noms'
+  const [activeTrailer, setActiveTrailer] = useState(null);
 
   const sortedFilms = useMemo(() => {
     const films = Object.entries(filmMap).map(([name, noms]) => ({ name, noms }));
@@ -92,6 +95,18 @@ export default function Films() {
               <span className="text-xs text-cream/30 font-body whitespace-nowrap">
                 {film.noms.length} nom{film.noms.length !== 1 ? 's' : ''}
               </span>
+              {trailers[film.name] && (
+                <button
+                  onClick={() => setActiveTrailer({ videoId: trailers[film.name], filmName: film.name })}
+                  className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded border border-gold/30 text-gold/70 hover:text-gold hover:border-gold/60 hover:bg-gold/5 transition-colors shrink-0"
+                  aria-label={`Play trailer for ${film.name}`}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  <span className="text-xs font-body tracking-wide uppercase">Trailer</span>
+                </button>
+              )}
             </div>
             <div className="flex flex-wrap gap-1.5">
               {film.noms.map((nom) => (
@@ -107,6 +122,14 @@ export default function Films() {
           </div>
         ))}
       </div>
+
+      {activeTrailer && (
+        <TrailerModal
+          videoId={activeTrailer.videoId}
+          filmName={activeTrailer.filmName}
+          onClose={() => setActiveTrailer(null)}
+        />
+      )}
     </div>
   );
 }

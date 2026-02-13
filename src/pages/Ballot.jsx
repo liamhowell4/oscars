@@ -31,6 +31,18 @@ export default function Ballot() {
     return 0;
   });
   const [showReview, setShowReview] = useState(false);
+
+  // React to category search param changes (e.g. from chat navigation)
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      const idx = categories.findIndex(c => c.id === categoryParam);
+      if (idx >= 0) {
+        setCurrentIndex(idx);
+        setShowReview(false);
+      }
+    }
+  }, [searchParams, categories]);
   const [timerTick, setTimerTick] = useState(0);
 
   // Tick every 60s to refresh countdown display

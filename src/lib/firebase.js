@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getFunctions } from 'firebase/functions';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -17,13 +18,15 @@ let app = null;
 let auth = null;
 let googleProvider = null;
 let db = null;
+let functions = null;
 
 if (firebaseConfigured) {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
   googleProvider = new GoogleAuthProvider();
   db = getFirestore(app);
+  functions = getFunctions(app);
 }
 
-export { auth, googleProvider, db };
+export { app, auth, googleProvider, db, functions };
 export default app;
