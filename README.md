@@ -1,6 +1,6 @@
 # Oscar Ballot 2026
 
-Prediction app for the 98th Academy Awards. Sign in with Google, pick winners across all 23 categories, join groups, and compete on leaderboards with live scoring during the ceremony.
+Oscar Ballot app for the 98th Academy Awards. Sign in with Google, pick winners across all 23 categories, join groups, and compete on leaderboards with live scoring during the ceremony.
 
 **Live:** https://oscar-ballot-2026.web.app
 
