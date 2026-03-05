@@ -15,7 +15,7 @@ export default function GoogleSignIn() {
     <button
       onClick={handleSignIn}
       disabled={loading}
-      className="group flex items-center gap-3 bg-white/95 hover:bg-white text-black/80 font-body font-semibold text-sm px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-[0_4px_20px_rgba(212,175,55,0.2)] disabled:opacity-50"
+      className="group flex items-center gap-3 bg-white hover:bg-white/90 text-cream font-body font-semibold text-sm px-6 py-3 transition-all duration-300 border border-cream/10 disabled:opacity-50"
     >
       <svg className="w-5 h-5" viewBox="0 0 24 24">
         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

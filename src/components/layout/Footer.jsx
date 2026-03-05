@@ -11,16 +11,16 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="text-gold/60 text-xs">★</span>
-            <span className="text-cream/35 text-xs uppercase tracking-[0.2em] font-body">
+            <span className="text-gold/70 text-xs">★</span>
+            <span className="text-cream/65 text-xs uppercase tracking-[0.2em] font-body font-medium">
               98th Academy Awards
             </span>
-            <span className="text-gold/30 text-xs">·</span>
-            <span className="text-cream/35 text-xs font-body">
+            <span className="text-gold/45 text-xs">·</span>
+            <span className="text-cream/65 text-xs font-body font-medium">
               March 2, 2026
             </span>
           </div>
-          <p className="text-cream/20 text-[11px] tracking-wider font-body">
+          <p className="text-cream/50 text-xs tracking-wider font-body">
             Not affiliated with the Academy of Motion Picture Arts and Sciences
           </p>
         </div>

@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oscar Ballot — Design Directions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Raleway:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700;9..40,800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { overflow-x: hidden; }
+
+    /* ─── Fixed top nav ─── */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: #0D0D0D;
+      display: flex; align-items: center; justify-content: center;
+      height: 44px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      gap: 0;
+    }
+    .top-nav a {
+      color: rgba(255,255,255,0.4);
+      font-family: 'Inter', sans-serif;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none;
+      padding: 0 28px; height: 44px;
+      display: flex; align-items: center;
+      border-right: 1px solid rgba(255,255,255,0.07);
+      transition: color 0.2s, background 0.2s;
+    }
+    .top-nav a:first-child { border-left: 1px solid rgba(255,255,255,0.07); }
+    .top-nav a:hover { color: white; background: rgba(255,255,255,0.04); }
+    .top-nav .top-label {
+      position: absolute; left: 24px;
+      color: rgba(255,255,255,0.18);
+      font-family: 'Inter', sans-serif;
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* ─── Screen sections ─── */
+    .screen {
+      min-height: 100vh;
+      padding-top: 44px;
+      position: relative;
+    }
+    .dir-badge {
+      position: absolute; top: 56px; right: 28px; z-index: 10;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+      opacity: 0.28; pointer-events: none;
+    }
+
+    /* ─── Animation base: start paused, trigger via JS ─── */
+    .a1 { animation: fadeUp 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; animation-play-state: paused; animation-delay: 0.05s; }
+    .a2 { animation: fadeUp 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; animation-play-state: paused; animation-delay: 0.18s; }
+    .a3 { animation: fadeUp 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; animation-play-state: paused; animation-delay: 0.3s; }
+    .a4 { animation: fadeUp 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; animation-play-state: paused; animation-delay: 0.42s; }
+    .a5 { animation: fadeUp 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; animation-play-state: paused; animation-delay: 0.54s; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    /* Hollywood curtain variant */
+    .reveal { animation: curtainReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; animation-play-state: paused; }
+    .reveal2 { animation: curtainReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; animation-play-state: paused; animation-delay: 0.2s; }
+    .reveal3 { animation: curtainReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; animation-play-state: paused; animation-delay: 0.38s; }
+    .reveal4 { animation: curtainReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; animation-play-state: paused; animation-delay: 0.52s; }
+    @keyframes curtainReveal {
+      from { opacity: 0; transform: translateY(32px) scaleY(0.96); }
+      to   { opacity: 1; transform: translateY(0) scaleY(1); }
+    }
+    /* Spring variant for modern */
+    .spring { animation: springUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; animation-play-state: paused; animation-delay: 0.08s; }
+    .spring2 { animation: springUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; animation-play-state: paused; animation-delay: 0.2s; }
+    .spring3 { animation: springUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; animation-play-state: paused; animation-delay: 0.32s; }
+    .spring4 { animation: springUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; animation-play-state: paused; animation-delay: 0.44s; }
+    @keyframes springUp {
+      from { opacity: 0; transform: translateY(22px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ════════════════════════════════════════════════
+       DIRECTION A — ELEVATED ART DECO
+    ════════════════════════════════════════════════ */
+    #dir-a { background: #F8F3E8; color: #18140A; font-family: 'Raleway', sans-serif; }
+    #dir-a .dir-badge { color: #18140A; }
+
+    #dir-a .app-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 80px; height: 72px;
+      border-bottom: 1px solid rgba(184,146,42,0.22);
+      background: #F8F3E8;
+    }
+    #dir-a .logo { display: flex; align-items: center; gap: 11px; }
+    #dir-a .logo-text {
+      font-family: 'Playfair Display', serif; font-weight: 800;
+      font-size: 14px; letter-spacing: 0.14em; color: #18140A;
+    }
+    #dir-a .nav-links { display: flex; gap: 40px; align-items: center; }
+    #dir-a .nav-links a {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(24,20,10,0.35); text-decoration: none; transition: color 0.2s;
+    }
+    #dir-a .nav-links a:hover { color: rgba(24,20,10,0.7); }
+    #dir-a .nav-links a.active {
+      color: #B8922A; font-weight: 700;
+      border-bottom: 1px solid #B8922A; padding-bottom: 2px;
+    }
+    #dir-a .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #B8922A;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-weight: 700;
+      font-size: 13px; color: #F8F3E8;
+    }
+
+    /* Asymmetric 2-col layout */
+    #dir-a .layout {
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 72px - 44px);
+      max-width: 1200px; margin: 0 auto; padding: 0 40px;
+    }
+    #dir-a .hero-col {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 64px 80px 0;
+      border-right: 1px solid rgba(184,146,42,0.14);
+    }
+    #dir-a .orn-row { display: flex; align-items: center; gap: 10px; margin-bottom: 26px; }
+    #dir-a .orn-line { height: 1px; background: rgba(184,146,42,0.35); }
+    #dir-a .label {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.52em; text-transform: uppercase;
+      color: rgba(184,146,42,0.7); margin-bottom: 10px;
+    }
+    #dir-a .hero-name {
+      font-family: 'Playfair Display', serif; font-size: 100px;
+      font-weight: 900; line-height: 0.88; color: #18140A;
+      letter-spacing: -0.02em; margin-bottom: 28px;
+    }
+    #dir-a .hero-body {
+      font-size: 13px; line-height: 1.8;
+      color: rgba(24,20,10,0.45); max-width: 300px; margin-bottom: 36px;
+    }
+    #dir-a .hero-body em  { color: #B8922A; font-style: normal; font-weight: 600; }
+    #dir-a .hero-body strong { color: #18140A; font-weight: 600; }
+    #dir-a .sub-orn { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    #dir-a .sub-orn-text {
+      font-size: 9px; font-weight: 600; letter-spacing: 0.32em;
+      text-transform: uppercase; color: rgba(24,20,10,0.25); white-space: nowrap;
+    }
+    #dir-a .btns { display: flex; gap: 10px; }
+    #dir-a .btn-fill {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 12px 28px; background: #B8922A; color: #F8F3E8;
+      text-decoration: none; border: 1.5px solid #B8922A;
+      transition: background 0.2s; display: inline-block;
+    }
+    #dir-a .btn-fill:hover { background: #8C6E1E; border-color: #8C6E1E; }
+    #dir-a .btn-ghost {
+      font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 12px 28px; border: 1.5px solid rgba(184,146,42,0.35);
+      color: rgba(24,20,10,0.55); text-decoration: none;
+      transition: border-color 0.2s, color 0.2s; display: inline-block;
+    }
+    #dir-a .btn-ghost:hover { border-color: rgba(184,146,42,0.7); color: rgba(24,20,10,0.8); }
+
+    #dir-a .stats-col {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 0 80px 64px; gap: 16px;
+    }
+    #dir-a .stat-card {
+      border: 1px solid rgba(184,146,42,0.27);
+      padding: 22px 24px; position: relative;
+      background: rgba(253,249,240,0.75);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    #dir-a .stat-card:hover {
+      border-color: rgba(184,146,42,0.55);
+      box-shadow: 0 4px 24px rgba(184,146,42,0.07);
+    }
+    .c { position: absolute; width: 9px; height: 9px; }
+    .c-tl { top: 6px; left: 6px; border-top: 1px solid #B8922A; border-left: 1px solid #B8922A; }
+    .c-tr { top: 6px; right: 6px; border-top: 1px solid #B8922A; border-right: 1px solid #B8922A; }
+    .c-bl { bottom: 6px; left: 6px; border-bottom: 1px solid #B8922A; border-left: 1px solid #B8922A; }
+    .c-br { bottom: 6px; right: 6px; border-bottom: 1px solid #B8922A; border-right: 1px solid #B8922A; }
+
+    #dir-a .stat-row { display: flex; justify-content: space-between; align-items: baseline; }
+    #dir-a .stat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(184,146,42,0.65); }
+    #dir-a .stat-val { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; color: #B8922A; line-height: 1; }
+    #dir-a .stat-denom { font-family: 'Raleway', sans-serif; font-size: 14px; font-weight: 300; color: rgba(24,20,10,0.22); }
+    #dir-a .stat-sub { font-size: 11px; color: rgba(24,20,10,0.35); margin-top: 4px; }
+    #dir-a .prog { margin-top: 12px; height: 1.5px; background: rgba(184,146,42,0.12); }
+    #dir-a .prog-fill { height: 100%; background: linear-gradient(90deg, #B8922A, #D4B060); transition: width 1s ease; }
+
+
+    /* ════════════════════════════════════════════════
+       DIRECTION B — HOLLYWOOD VINTAGE (dark first)
+    ════════════════════════════════════════════════ */
+    #dir-b { background: #0C0916; color: #EDE5D0; font-family: 'DM Sans', sans-serif; }
+    #dir-b .dir-badge { color: rgba(237,229,208,0.28); }
+
+    /* Atmospheric film-grain texture overlay */
+    #dir-b::before {
+      content: ''; pointer-events: none;
+      position: fixed; inset: 44px 0 0 0; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.35; mix-blend-mode: overlay;
+    }
+
+    #dir-b .app-nav {
+      position: relative; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 72px; height: 72px;
+    }
+    #dir-b .logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 600; font-style: italic;
+      letter-spacing: 0.06em; color: #C8A85E;
+    }
+    #dir-b .nav-links { display: flex; gap: 32px; align-items: center; }
+    #dir-b .nav-links a {
+      font-size: 11px; font-weight: 300;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(237,229,208,0.38); text-decoration: none; transition: color 0.2s;
+    }
+    #dir-b .nav-links a:hover { color: rgba(237,229,208,0.75); }
+    #dir-b .nav-links a.active { color: #C8A85E; font-weight: 400; }
+    #dir-b .avatar {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(200,168,94,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600; font-style: italic; font-size: 16px; color: #C8A85E;
+    }
+
+    #dir-b .layout {
+      position: relative; z-index: 5;
+      display: flex; flex-direction: column; align-items: center;
+      max-width: 760px; margin: 0 auto;
+      padding: 56px 40px 80px;
+      min-height: calc(100vh - 72px - 44px);
+      justify-content: center;
+    }
+    #dir-b .eyebrow {
+      font-size: 10px; font-weight: 300;
+      letter-spacing: 0.55em; text-transform: uppercase;
+      color: rgba(200,168,94,0.55); text-align: center; margin-bottom: 6px;
+    }
+    #dir-b .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 128px; font-weight: 600; font-style: italic;
+      line-height: 0.83; text-align: center;
+      color: #EDE5D0; letter-spacing: -0.01em; margin-bottom: 10px;
+    }
+    #dir-b .hero-sub {
+      font-size: 10px; font-weight: 300; letter-spacing: 0.5em;
+      text-transform: uppercase; color: rgba(237,229,208,0.28);
+      text-align: center; margin-bottom: 52px;
+    }
+
+    #dir-b .divider {
+      width: 100%; height: 1px;
+      background: rgba(200,168,94,0.18); margin-bottom: 48px;
+      position: relative;
+    }
+    #dir-b .divider::before {
+      content: '✦'; position: absolute;
+      left: 50%; top: 50%; transform: translate(-50%, -50%);
+      font-size: 9px; color: rgba(200,168,94,0.5);
+      background: #0C0916; padding: 0 14px;
+    }
+
+    /* Horizontal stat rows — no cards, just ruled list */
+    #dir-b .stats { width: 100%; margin-bottom: 52px; }
+    #dir-b .stat-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(237,229,208,0.07);
+    }
+    #dir-b .stat-row:first-child { border-top: 1px solid rgba(237,229,208,0.07); }
+    #dir-b .stat-name {
+      font-size: 11px; font-weight: 300;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(237,229,208,0.38); min-width: 160px;
+    }
+    #dir-b .stat-bar {
+      flex: 1; margin: 0 48px; height: 1px;
+      background: rgba(237,229,208,0.07); position: relative;
+    }
+    #dir-b .stat-bar-fill {
+      position: absolute; left: 0; top: 0; height: 100%;
+      background: rgba(200,168,94,0.35);
+    }
+    #dir-b .stat-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px; font-weight: 600; color: #C8A85E; line-height: 1;
+    }
+    #dir-b .stat-denom {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 300; color: rgba(237,229,208,0.2); margin-left: 3px;
+    }
+
+    #dir-b .actions { display: flex; gap: 14px; justify-content: center; }
+    #dir-b .btn-fill {
+      font-size: 10px; font-weight: 400;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      padding: 15px 40px; background: #7D1C3C; color: #F0E8D5;
+      text-decoration: none; border: 1px solid #7D1C3C;
+      transition: background 0.25s; display: inline-block;
+    }
+    #dir-b .btn-fill:hover { background: #9B2A50; border-color: #9B2A50; }
+    #dir-b .btn-ghost {
+      font-size: 10px; font-weight: 300;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      padding: 15px 40px; border: 1px solid rgba(200,168,94,0.28);
+      color: rgba(237,229,208,0.5); text-decoration: none;
+      transition: all 0.2s; display: inline-block;
+    }
+    #dir-b .btn-ghost:hover { border-color: rgba(200,168,94,0.6); color: rgba(237,229,208,0.8); }
+
+
+    /* ════════════════════════════════════════════════
+       DIRECTION C — MODERN LUXURY
+    ════════════════════════════════════════════════ */
+    #dir-c { background: #F4F3F0; color: #1C1C1A; font-family: 'Inter', sans-serif; }
+    #dir-c .dir-badge { color: #1C1C1A; }
+
+    /* Pill-style nav */
+    #dir-c .app-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 56px; height: 68px;
+      background: rgba(244,243,240,0.88); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(28,28,26,0.07);
+    }
+    #dir-c .logo-text {
+      font-family: 'DM Sans', sans-serif; font-weight: 800;
+      font-size: 14px; letter-spacing: -0.02em; color: #1C1C1A;
+    }
+    #dir-c .nav-pill {
+      display: flex; align-items: center; gap: 2px;
+      background: rgba(28,28,26,0.06); border-radius: 100px; padding: 4px;
+    }
+    #dir-c .nav-pill a {
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+      color: rgba(28,28,26,0.45); text-decoration: none;
+      padding: 7px 18px; border-radius: 100px; transition: all 0.2s;
+    }
+    #dir-c .nav-pill a:hover { color: rgba(28,28,26,0.75); }
+    #dir-c .nav-pill a.active {
+      background: white; color: #1C1C1A;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    #dir-c .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #8B6848;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 13px; color: white;
+    }
+
+    #dir-c .layout {
+      max-width: 1080px; margin: 0 auto;
+      padding: 60px 56px;
+      min-height: calc(100vh - 68px - 44px);
+      display: flex; flex-direction: column; gap: 0;
+    }
+
+    /* Top: welcome left, score right — score is the HERO */
+    #dir-c .top-row {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 60px;
+    }
+    #dir-c .welcome-block { display: flex; flex-direction: column; }
+    #dir-c .welcome-label {
+      font-size: 12px; font-weight: 400;
+      color: rgba(28,28,26,0.38); margin-bottom: 6px;
+    }
+    #dir-c .welcome-name {
+      font-family: 'DM Sans', sans-serif; font-size: 64px; font-weight: 800;
+      color: #1C1C1A; line-height: 0.9; letter-spacing: -0.03em;
+    }
+    #dir-c .score-block { text-align: right; }
+    #dir-c .score-label {
+      font-size: 11px; font-weight: 400;
+      color: rgba(28,28,26,0.35); margin-bottom: 4px;
+    }
+    #dir-c .score-val {
+      font-family: 'DM Sans', sans-serif; font-size: 108px; font-weight: 800;
+      color: #8B6848; line-height: 0.85; letter-spacing: -0.05em;
+    }
+    #dir-c .score-denom {
+      font-family: 'DM Sans', sans-serif; font-size: 28px; font-weight: 300;
+      color: rgba(28,28,26,0.22); letter-spacing: -0.02em;
+    }
+    #dir-c .score-sub {
+      font-size: 11px; color: rgba(28,28,26,0.3);
+      text-align: right; margin-top: 3px;
+    }
+
+    /* Cards: rounded, slightly elevated */
+    #dir-c .cards { display: flex; gap: 14px; margin-bottom: 36px; }
+    #dir-c .card {
+      flex: 1; background: white; border-radius: 16px;
+      padding: 22px; border: 1px solid rgba(28,28,26,0.06);
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
+    }
+    #dir-c .card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.08); }
+    #dir-c .card-label { font-size: 11px; font-weight: 500; color: rgba(28,28,26,0.35); margin-bottom: 10px; }
+    #dir-c .card-val {
+      font-family: 'DM Sans', sans-serif; font-size: 44px; font-weight: 800;
+      color: #1C1C1A; line-height: 1; letter-spacing: -0.02em; margin-bottom: 2px;
+    }
+    #dir-c .card-val-unit { font-size: 18px; font-weight: 300; color: rgba(28,28,26,0.28); }
+    #dir-c .card-sub { font-size: 12px; color: rgba(28,28,26,0.35); }
+    #dir-c .card-prog {
+      margin-top: 14px; height: 3px;
+      background: rgba(28,28,26,0.07); border-radius: 100px;
+    }
+    #dir-c .card-prog-fill { height: 100%; border-radius: 100px; background: #8B6848; }
+
+    /* Pill buttons */
+    #dir-c .actions { display: flex; gap: 10px; align-items: center; }
+    #dir-c .btn-fill {
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
+      letter-spacing: -0.01em; padding: 13px 28px;
+      background: #1C1C1A; color: #F4F3F0;
+      text-decoration: none; border-radius: 100px;
+      transition: background 0.2s, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: inline-block;
+    }
+    #dir-c .btn-fill:hover { background: #333; transform: scale(1.03); }
+    #dir-c .btn-ghost {
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+      letter-spacing: -0.01em; padding: 13px 28px;
+      border: 1px solid rgba(28,28,26,0.14); color: rgba(28,28,26,0.55);
+      text-decoration: none; border-radius: 100px;
+      transition: all 0.2s; display: inline-block;
+    }
+    #dir-c .btn-ghost:hover { border-color: rgba(28,28,26,0.4); color: #1C1C1A; }
+
+
+    /* ════════════════════════════════════════════════
+       DARK VARIANTS (A-dark, C-dark)
+    ════════════════════════════════════════════════ */
+
+    /* Direction A — Dark */
+    #dir-a-dark {
+      background: #0D0B07; color: #EDE5C4;
+      font-family: 'Raleway', sans-serif;
+    }
+    #dir-a-dark .dir-badge { color: rgba(237,229,196,0.3); }
+    #dir-a-dark .app-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 80px; height: 72px;
+      border-bottom: 1px solid rgba(201,168,76,0.18);
+      background: #0D0B07;
+    }
+    #dir-a-dark .logo { display: flex; align-items: center; gap: 11px; }
+    #dir-a-dark .logo-text { font-family: 'Playfair Display', serif; font-weight: 800; font-size: 14px; letter-spacing: 0.14em; color: #EDE5C4; }
+    #dir-a-dark .nav-links { display: flex; gap: 40px; }
+    #dir-a-dark .nav-links a { font-size: 10px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(237,229,196,0.3); text-decoration: none; transition: color 0.2s; }
+    #dir-a-dark .nav-links a:hover { color: rgba(237,229,196,0.65); }
+    #dir-a-dark .nav-links a.active { color: #C9A84C; font-weight: 700; border-bottom: 1px solid #C9A84C; padding-bottom: 2px; }
+    #dir-a-dark .avatar { width: 34px; height: 34px; border-radius: 50%; background: #C9A84C; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 13px; color: #0D0B07; }
+    #dir-a-dark .layout { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 72px - 44px); max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+    #dir-a-dark .hero-col { display: flex; flex-direction: column; justify-content: center; padding: 80px 64px 80px 0; border-right: 1px solid rgba(201,168,76,0.12); }
+    #dir-a-dark .orn-row { display: flex; align-items: center; gap: 10px; margin-bottom: 26px; }
+    #dir-a-dark .orn-line { height: 1px; background: rgba(201,168,76,0.3); }
+    #dir-a-dark .label { font-size: 10px; font-weight: 600; letter-spacing: 0.52em; text-transform: uppercase; color: rgba(201,168,76,0.6); margin-bottom: 10px; }
+    #dir-a-dark .hero-name { font-family: 'Playfair Display', serif; font-size: 100px; font-weight: 900; line-height: 0.88; color: #EDE5C4; letter-spacing: -0.02em; margin-bottom: 28px; }
+    #dir-a-dark .hero-body { font-size: 13px; line-height: 1.8; color: rgba(237,229,196,0.4); max-width: 300px; margin-bottom: 36px; }
+    #dir-a-dark .hero-body em { color: #C9A84C; font-style: normal; font-weight: 600; }
+    #dir-a-dark .hero-body strong { color: #EDE5C4; font-weight: 600; }
+    #dir-a-dark .sub-orn { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    #dir-a-dark .sub-orn-text { font-size: 9px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(237,229,196,0.2); white-space: nowrap; }
+    #dir-a-dark .btns { display: flex; gap: 10px; }
+    #dir-a-dark .btn-fill { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; padding: 12px 28px; background: #C9A84C; color: #0D0B07; text-decoration: none; border: 1.5px solid #C9A84C; transition: background 0.2s; display: inline-block; }
+    #dir-a-dark .btn-fill:hover { background: #E0C060; border-color: #E0C060; }
+    #dir-a-dark .btn-ghost { font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; padding: 12px 28px; border: 1.5px solid rgba(201,168,76,0.3); color: rgba(237,229,196,0.5); text-decoration: none; transition: all 0.2s; display: inline-block; }
+    #dir-a-dark .btn-ghost:hover { border-color: rgba(201,168,76,0.6); color: rgba(237,229,196,0.8); }
+    #dir-a-dark .stats-col { display: flex; flex-direction: column; justify-content: center; padding: 80px 0 80px 64px; gap: 16px; }
+    #dir-a-dark .stat-card { border: 1px solid rgba(201,168,76,0.2); padding: 22px 24px; position: relative; background: rgba(30,25,15,0.6); transition: border-color 0.3s; }
+    #dir-a-dark .stat-card:hover { border-color: rgba(201,168,76,0.45); }
+    .c-dark { position: absolute; width: 9px; height: 9px; }
+    .c-dark.tl { top: 6px; left: 6px; border-top: 1px solid #C9A84C; border-left: 1px solid #C9A84C; }
+    .c-dark.tr { top: 6px; right: 6px; border-top: 1px solid #C9A84C; border-right: 1px solid #C9A84C; }
+    .c-dark.bl { bottom: 6px; left: 6px; border-bottom: 1px solid #C9A84C; border-left: 1px solid #C9A84C; }
+    .c-dark.br { bottom: 6px; right: 6px; border-bottom: 1px solid #C9A84C; border-right: 1px solid #C9A84C; }
+    #dir-a-dark .stat-row { display: flex; justify-content: space-between; align-items: baseline; }
+    #dir-a-dark .stat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(201,168,76,0.55); }
+    #dir-a-dark .stat-val { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; color: #C9A84C; line-height: 1; }
+    #dir-a-dark .stat-denom { font-family: 'Raleway', sans-serif; font-size: 14px; font-weight: 300; color: rgba(237,229,196,0.18); }
+    #dir-a-dark .stat-sub { font-size: 11px; color: rgba(237,229,196,0.3); margin-top: 4px; }
+    #dir-a-dark .prog { margin-top: 12px; height: 1.5px; background: rgba(201,168,76,0.1); }
+    #dir-a-dark .prog-fill { height: 100%; background: linear-gradient(90deg, #C9A84C, #E0C060); }
+
+    /* Direction B — Light */
+    #dir-b-light { background: #F3EDE2; color: #1C1830; font-family: 'DM Sans', sans-serif; }
+    #dir-b-light .dir-badge { color: rgba(28,24,48,0.3); }
+
+    #dir-b-light .app-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 72px; height: 72px;
+      border-bottom: 1px solid rgba(28,24,48,0.1);
+      background: #F3EDE2;
+    }
+    #dir-b-light .logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 600; font-style: italic;
+      letter-spacing: 0.06em; color: #8B1A3A;
+    }
+    #dir-b-light .nav-links { display: flex; gap: 32px; align-items: center; }
+    #dir-b-light .nav-links a {
+      font-size: 11px; font-weight: 300;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(28,24,48,0.38); text-decoration: none; transition: color 0.2s;
+    }
+    #dir-b-light .nav-links a:hover { color: rgba(28,24,48,0.7); }
+    #dir-b-light .nav-links a.active { color: #1C1830; font-weight: 400; }
+    #dir-b-light .avatar {
+      width: 32px; height: 32px;
+      border: 1px solid rgba(139,26,58,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600; font-style: italic; font-size: 16px; color: #8B1A3A;
+    }
+
+    #dir-b-light .layout {
+      display: flex; flex-direction: column; align-items: center;
+      max-width: 760px; margin: 0 auto;
+      padding: 56px 40px 80px;
+      min-height: calc(100vh - 72px - 44px);
+      justify-content: center;
+    }
+    #dir-b-light .eyebrow {
+      font-size: 10px; font-weight: 300;
+      letter-spacing: 0.55em; text-transform: uppercase;
+      color: rgba(139,26,58,0.55); text-align: center; margin-bottom: 6px;
+    }
+    #dir-b-light .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 128px; font-weight: 600; font-style: italic;
+      line-height: 0.83; text-align: center;
+      color: #1C1830; letter-spacing: -0.01em; margin-bottom: 10px;
+    }
+    #dir-b-light .hero-sub {
+      font-size: 10px; font-weight: 300; letter-spacing: 0.5em;
+      text-transform: uppercase; color: rgba(28,24,48,0.3);
+      text-align: center; margin-bottom: 52px;
+    }
+    #dir-b-light .divider {
+      width: 100%; height: 1px;
+      background: rgba(28,24,48,0.12); margin-bottom: 48px; position: relative;
+    }
+    #dir-b-light .divider::before {
+      content: '✦'; position: absolute;
+      left: 50%; top: 50%; transform: translate(-50%, -50%);
+      font-size: 9px; color: rgba(139,26,58,0.45);
+      background: #F3EDE2; padding: 0 14px;
+    }
+    #dir-b-light .stats { width: 100%; margin-bottom: 52px; }
+    #dir-b-light .stat-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 0; border-bottom: 1px solid rgba(28,24,48,0.07);
+    }
+    #dir-b-light .stat-row:first-child { border-top: 1px solid rgba(28,24,48,0.07); }
+    #dir-b-light .stat-name {
+      font-size: 11px; font-weight: 300;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(28,24,48,0.4); min-width: 160px;
+    }
+    #dir-b-light .stat-bar {
+      flex: 1; margin: 0 48px; height: 1px;
+      background: rgba(28,24,48,0.08); position: relative;
+    }
+    #dir-b-light .stat-bar-fill {
+      position: absolute; left: 0; top: 0; height: 100%;
+      background: rgba(139,26,58,0.3);
+    }
+    #dir-b-light .stat-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px; font-weight: 600; color: #1C1830; line-height: 1;
+    }
+    #dir-b-light .stat-denom {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 300; color: rgba(28,24,48,0.22); margin-left: 3px;
+    }
+    #dir-b-light .actions { display: flex; gap: 14px; justify-content: center; }
+    #dir-b-light .btn-fill {
+      font-size: 10px; font-weight: 400;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      padding: 15px 40px; background: #8B1A3A; color: #F3EDE2;
+      text-decoration: none; border: 1px solid #8B1A3A;
+      transition: background 0.25s; display: inline-block;
+    }
+    #dir-b-light .btn-fill:hover { background: #A52248; border-color: #A52248; }
+    #dir-b-light .btn-ghost {
+      font-size: 10px; font-weight: 300;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      padding: 15px 40px; border: 1px solid rgba(28,24,48,0.2);
+      color: rgba(28,24,48,0.5); text-decoration: none;
+      transition: all 0.2s; display: inline-block;
+    }
+    #dir-b-light .btn-ghost:hover { border-color: rgba(28,24,48,0.45); color: rgba(28,24,48,0.8); }
+
+    /* Direction C — Dark */
+    #dir-c-dark { background: #111110; color: #EAE5DC; font-family: 'Inter', sans-serif; }
+    #dir-c-dark .dir-badge { color: rgba(234,229,220,0.25); }
+    #dir-c-dark .app-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 56px; height: 68px; background: rgba(17,17,16,0.9); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(234,229,220,0.07); }
+    #dir-c-dark .logo-text { font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: -0.02em; color: #EAE5DC; }
+    #dir-c-dark .nav-pill { display: flex; align-items: center; gap: 2px; background: rgba(234,229,220,0.06); border-radius: 100px; padding: 4px; }
+    #dir-c-dark .nav-pill a { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: rgba(234,229,220,0.38); text-decoration: none; padding: 7px 18px; border-radius: 100px; transition: all 0.2s; }
+    #dir-c-dark .nav-pill a:hover { color: rgba(234,229,220,0.7); }
+    #dir-c-dark .nav-pill a.active { background: rgba(234,229,220,0.1); color: #EAE5DC; }
+    #dir-c-dark .avatar { width: 34px; height: 34px; border-radius: 50%; background: #A07850; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; color: white; }
+    #dir-c-dark .layout { max-width: 1080px; margin: 0 auto; padding: 60px 56px; min-height: calc(100vh - 68px - 44px); display: flex; flex-direction: column; }
+    #dir-c-dark .top-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 60px; }
+    #dir-c-dark .welcome-label { font-size: 12px; font-weight: 400; color: rgba(234,229,220,0.32); margin-bottom: 6px; }
+    #dir-c-dark .welcome-name { font-family: 'DM Sans', sans-serif; font-size: 64px; font-weight: 800; color: #EAE5DC; line-height: 0.9; letter-spacing: -0.03em; }
+    #dir-c-dark .score-label { font-size: 11px; font-weight: 400; color: rgba(234,229,220,0.3); margin-bottom: 4px; text-align: right; }
+    #dir-c-dark .score-val { font-family: 'DM Sans', sans-serif; font-size: 108px; font-weight: 800; color: #A07850; line-height: 0.85; letter-spacing: -0.05em; }
+    #dir-c-dark .score-denom { font-family: 'DM Sans', sans-serif; font-size: 28px; font-weight: 300; color: rgba(234,229,220,0.18); letter-spacing: -0.02em; }
+    #dir-c-dark .score-sub { font-size: 11px; color: rgba(234,229,220,0.25); text-align: right; margin-top: 3px; }
+    #dir-c-dark .cards { display: flex; gap: 14px; margin-bottom: 36px; }
+    #dir-c-dark .card { flex: 1; background: rgba(255,255,255,0.04); border-radius: 16px; padding: 22px; border: 1px solid rgba(234,229,220,0.07); transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease; }
+    #dir-c-dark .card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.3); }
+    #dir-c-dark .card-label { font-size: 11px; font-weight: 500; color: rgba(234,229,220,0.3); margin-bottom: 10px; }
+    #dir-c-dark .card-val { font-family: 'DM Sans', sans-serif; font-size: 44px; font-weight: 800; color: #EAE5DC; line-height: 1; letter-spacing: -0.02em; margin-bottom: 2px; }
+    #dir-c-dark .card-val-unit { font-size: 18px; font-weight: 300; color: rgba(234,229,220,0.2); }
+    #dir-c-dark .card-sub { font-size: 12px; color: rgba(234,229,220,0.3); }
+    #dir-c-dark .card-prog { margin-top: 14px; height: 3px; background: rgba(234,229,220,0.07); border-radius: 100px; }
+    #dir-c-dark .card-prog-fill { height: 100%; border-radius: 100px; background: #A07850; }
+    #dir-c-dark .actions { display: flex; gap: 10px; }
+    #dir-c-dark .btn-fill { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: -0.01em; padding: 13px 28px; background: #EAE5DC; color: #111110; text-decoration: none; border-radius: 100px; transition: background 0.2s, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); display: inline-block; }
+    #dir-c-dark .btn-fill:hover { background: white; transform: scale(1.03); }
+    #dir-c-dark .btn-ghost { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: -0.01em; padding: 13px 28px; border: 1px solid rgba(234,229,220,0.14); color: rgba(234,229,220,0.5); text-decoration: none; border-radius: 100px; transition: all 0.2s; display: inline-block; }
+    #dir-c-dark .btn-ghost:hover { border-color: rgba(234,229,220,0.35); color: rgba(234,229,220,0.8); }
+  </style>
+</head>
+<body>
+
+<!-- ── Fixed nav ─────────────────────────────── -->
+<nav class="top-nav">
+  <span class="top-label">Design Directions</span>
+  <a href="#dir-a">A · Art Deco Light</a>
+  <a href="#dir-a-dark">A · Art Deco Dark</a>
+  <a href="#dir-b">B · Hollywood Dark</a>
+  <a href="#dir-b-light">B · Hollywood Light</a>
+  <a href="#dir-c">C · Modern Luxury Light</a>
+  <a href="#dir-c-dark">C · Modern Luxury Dark</a>
+</nav>
+
+
+<!-- ════════════════════════════════════════════
+     DIRECTION A  —  Elevated Art Deco  (Light)
+════════════════════════════════════════════ -->
+<section class="screen" id="dir-a">
+  <span class="dir-badge">A — Elevated Art Deco · Light</span>
+
+  <nav class="app-nav">
+    <div class="logo">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <rect x="7.5" y="1" width="9" height="9" transform="rotate(45 7.5 7.5)" stroke="#B8922A" stroke-width="1.5"/>
+      </svg>
+      <span class="logo-text">OSCAR BALLOT</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active">Ballot</a>
+      <a href="#">Leaderboard</a>
+      <a href="#">Films</a>
+      <a href="#">Groups</a>
+    </div>
+    <div class="avatar">L</div>
+  </nav>
+
+  <div class="layout">
+    <!-- Hero column -->
+    <div class="hero-col">
+      <div class="orn-row a1">
+        <div class="orn-line" style="width: 24px;"></div>
+        <svg width="7" height="7" viewBox="0 0 7 7"><rect x="3.5" y="0" width="5" height="5" transform="rotate(45 3.5 3.5)" fill="#B8922A"/></svg>
+        <div class="orn-line" style="flex: 1;"></div>
+      </div>
+      <p class="label a1">Welcome back</p>
+      <h1 class="hero-name a2">Liam</h1>
+      <p class="hero-body a3">
+        You've picked <em>17 of 23</em> categories.<br>
+        Ballots lock in <strong>3 days, 14 hours</strong>.
+      </p>
+      <div class="sub-orn a3">
+        <div class="orn-line" style="flex: 1;"></div>
+        <span class="sub-orn-text">98th Academy Awards · March 2, 2026</span>
+        <div class="orn-line" style="width: 24px;"></div>
+      </div>
+      <div class="btns a4">
+        <a href="#" class="btn-fill">Edit Ballot</a>
+        <a href="#" class="btn-ghost">Leaderboard</a>
+      </div>
+    </div>
+
+    <!-- Stats column -->
+    <div class="stats-col">
+      <div class="stat-card a2">
+        <div class="c c-tl"></div><div class="c c-tr"></div>
+        <div class="c c-bl"></div><div class="c c-br"></div>
+        <div class="stat-row">
+          <span class="stat-label">Ballot Progress</span>
+          <span class="stat-val">17<span class="stat-denom">/23</span></span>
+        </div>
+        <p class="stat-sub">74% complete</p>
+        <div class="prog"><div class="prog-fill" style="width: 74%;"></div></div>
+      </div>
+      <div class="stat-card a3">
+        <div class="c c-tl"></div><div class="c c-tr"></div>
+        <div class="c c-bl"></div><div class="c c-br"></div>
+        <div class="stat-row">
+          <span class="stat-label">Your Score</span>
+          <span class="stat-val">14<span class="stat-denom">/18</span></span>
+        </div>
+        <p class="stat-sub">78% correct so far</p>
+      </div>
+      <div class="stat-card a4">
+        <div class="c c-tl"></div><div class="c c-tr"></div>
+        <div class="c c-bl"></div><div class="c c-br"></div>
+        <div class="stat-row">
+          <span class="stat-label">Community</span>
+          <span class="stat-val">24<span class="stat-denom">/31</span></span>
+        </div>
+        <p class="stat-sub">Ballots complete</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     DIRECTION A  —  Elevated Art Deco  (Dark)
+════════════════════════════════════════════ -->
+<section class="screen" id="dir-a-dark">
+  <span class="dir-badge">A — Elevated Art Deco · Dark</span>
+
+  <nav class="app-nav">
+    <div class="logo">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <rect x="7.5" y="1" width="9" height="9" transform="rotate(45 7.5 7.5)" stroke="#C9A84C" stroke-width="1.5"/>
+      </svg>
+      <span class="logo-text">OSCAR BALLOT</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active">Ballot</a>
+      <a href="#">Leaderboard</a>
+      <a href="#">Films</a>
+      <a href="#">Groups</a>
+    </div>
+    <div class="avatar">L</div>
+  </nav>
+
+  <div class="layout">
+    <div class="hero-col">
+      <div class="orn-row a1">
+        <div class="orn-line" style="width: 24px;"></div>
+        <svg width="7" height="7" viewBox="0 0 7 7"><rect x="3.5" y="0" width="5" height="5" transform="rotate(45 3.5 3.5)" fill="#C9A84C"/></svg>
+        <div class="orn-line" style="flex: 1;"></div>
+      </div>
+      <p class="label a1">Welcome back</p>
+      <h1 class="hero-name a2">Liam</h1>
+      <p class="hero-body a3">
+        You've picked <em>17 of 23</em> categories.<br>
+        Ballots lock in <strong>3 days, 14 hours</strong>.
+      </p>
+      <div class="sub-orn a3">
+        <div class="orn-line" style="flex: 1;"></div>
+        <span class="sub-orn-text">98th Academy Awards · March 2, 2026</span>
+        <div class="orn-line" style="width: 24px;"></div>
+      </div>
+      <div class="btns a4">
+        <a href="#" class="btn-fill">Edit Ballot</a>
+        <a href="#" class="btn-ghost">Leaderboard</a>
+      </div>
+    </div>
+    <div class="stats-col">
+      <div class="stat-card a2">
+        <div class="c-dark tl"></div><div class="c-dark tr"></div>
+        <div class="c-dark bl"></div><div class="c-dark br"></div>
+        <div class="stat-row">
+          <span class="stat-label">Ballot Progress</span>
+          <span class="stat-val">17<span class="stat-denom">/23</span></span>
+        </div>
+        <p class="stat-sub">74% complete</p>
+        <div class="prog"><div class="prog-fill" style="width: 74%;"></div></div>
+      </div>
+      <div class="stat-card a3">
+        <div class="c-dark tl"></div><div class="c-dark tr"></div>
+        <div class="c-dark bl"></div><div class="c-dark br"></div>
+        <div class="stat-row">
+          <span class="stat-label">Your Score</span>
+          <span class="stat-val">14<span class="stat-denom">/18</span></span>
+        </div>
+        <p class="stat-sub">78% correct so far</p>
+      </div>
+      <div class="stat-card a4">
+        <div class="c-dark tl"></div><div class="c-dark tr"></div>
+        <div class="c-dark bl"></div><div class="c-dark br"></div>
+        <div class="stat-row">
+          <span class="stat-label">Community</span>
+          <span class="stat-val">24<span class="stat-denom">/31</span></span>
+        </div>
+        <p class="stat-sub">Ballots complete</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     DIRECTION B  —  Hollywood Vintage  (Dark)
+════════════════════════════════════════════ -->
+<section class="screen" id="dir-b">
+  <span class="dir-badge">B — Hollywood Vintage · Dark</span>
+
+  <nav class="app-nav">
+    <span class="logo-text">Oscar Ballot</span>
+    <div class="nav-links">
+      <a href="#" class="active">Ballot</a>
+      <a href="#">Leaderboard</a>
+      <a href="#">Films</a>
+      <a href="#">Groups</a>
+    </div>
+    <div class="avatar">L</div>
+  </nav>
+
+  <div class="layout">
+    <p class="eyebrow reveal">98th Academy Awards · March 2, 2026</p>
+    <h1 class="hero-name reveal2">Liam</h1>
+    <p class="hero-sub reveal2">Welcome back</p>
+    <div class="divider reveal3"></div>
+    <div class="stats reveal3">
+      <div class="stat-row">
+        <span class="stat-name">Ballot Progress</span>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width: 74%;"></div></div>
+        <span class="stat-val">17<span class="stat-denom">/23</span></span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-name">Your Score</span>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width: 78%;"></div></div>
+        <span class="stat-val">14<span class="stat-denom">/18</span></span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-name">Community</span>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width: 77%;"></div></div>
+        <span class="stat-val">24<span class="stat-denom">/31</span></span>
+      </div>
+    </div>
+    <div class="actions reveal4">
+      <a href="#" class="btn-fill">Edit Ballot</a>
+      <a href="#" class="btn-ghost">View Leaderboard</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     DIRECTION B  —  Hollywood Vintage  (Light)
+════════════════════════════════════════════ -->
+<section class="screen" id="dir-b-light">
+  <span class="dir-badge">B — Hollywood Vintage · Light</span>
+
+  <nav class="app-nav">
+    <span class="logo-text">Oscar Ballot</span>
+    <div class="nav-links">
+      <a href="#" class="active">Ballot</a>
+      <a href="#">Leaderboard</a>
+      <a href="#">Films</a>
+      <a href="#">Groups</a>
+    </div>
+    <div class="avatar">L</div>
+  </nav>
+
+  <div class="layout">
+    <p class="eyebrow reveal">98th Academy Awards · March 2, 2026</p>
+    <h1 class="hero-name reveal2">Liam</h1>
+    <p class="hero-sub reveal2">Welcome back</p>
+    <div class="divider reveal3"></div>
+    <div class="stats reveal3">
+      <div class="stat-row">
+        <span class="stat-name">Ballot Progress</span>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width: 74%;"></div></div>
+        <span class="stat-val">17<span class="stat-denom">/23</span></span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-name">Your Score</span>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width: 78%;"></div></div>
+        <span class="stat-val">14<span class="stat-denom">/18</span></span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-name">Community</span>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width: 77%;"></div></div>
+        <span class="stat-val">24<span class="stat-denom">/31</span></span>
+      </div>
+    </div>
+    <div class="actions reveal4">
+      <a href="#" class="btn-fill">Edit Ballot</a>
+      <a href="#" class="btn-ghost">View Leaderboard</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     DIRECTION C  —  Modern Luxury  (Light)
+════════════════════════════════════════════ -->
+<section class="screen" id="dir-c">
+  <span class="dir-badge">C — Modern Luxury · Light</span>
+
+  <nav class="app-nav">
+    <span class="logo-text">Oscar Ballot</span>
+    <div class="nav-pill">
+      <a href="#">Ballot</a>
+      <a href="#" class="active">Dashboard</a>
+      <a href="#">Films</a>
+      <a href="#">Groups</a>
+    </div>
+    <div class="avatar">L</div>
+  </nav>
+
+  <div class="layout">
+    <div class="top-row spring">
+      <div class="welcome-block">
+        <p class="welcome-label">Good evening</p>
+        <h1 class="welcome-name">Liam</h1>
+      </div>
+      <div class="score-block">
+        <p class="score-label">Your score</p>
+        <div style="display: flex; align-items: baseline; gap: 3px; justify-content: flex-end;">
+          <span class="score-val">14</span>
+          <span class="score-denom">/18</span>
+        </div>
+        <p class="score-sub">14 of 18 winners announced</p>
+      </div>
+    </div>
+    <div class="cards spring2">
+      <div class="card">
+        <p class="card-label">Ballot Progress</p>
+        <p class="card-val">17</p>
+        <p class="card-sub">of 23 categories</p>
+        <div class="card-prog"><div class="card-prog-fill" style="width: 74%;"></div></div>
+      </div>
+      <div class="card">
+        <p class="card-label">Locks in</p>
+        <p class="card-val">3<span class="card-val-unit">d</span> 14<span class="card-val-unit">h</span></p>
+        <p class="card-sub">March 2, 8:00 PM</p>
+      </div>
+      <div class="card">
+        <p class="card-label">Community</p>
+        <p class="card-val">24</p>
+        <p class="card-sub">of 31 ballots complete</p>
+        <div class="card-prog"><div class="card-prog-fill" style="width: 77%;"></div></div>
+      </div>
+    </div>
+    <div class="actions spring3">
+      <a href="#" class="btn-fill">Edit Ballot</a>
+      <a href="#" class="btn-ghost">Leaderboard</a>
+      <a href="#" class="btn-ghost">Films</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     DIRECTION C  —  Modern Luxury  (Dark)
+════════════════════════════════════════════ -->
+<section class="screen" id="dir-c-dark">
+  <span class="dir-badge">C — Modern Luxury · Dark</span>
+
+  <nav class="app-nav">
+    <span class="logo-text">Oscar Ballot</span>
+    <div class="nav-pill">
+      <a href="#">Ballot</a>
+      <a href="#" class="active">Dashboard</a>
+      <a href="#">Films</a>
+      <a href="#">Groups</a>
+    </div>
+    <div class="avatar">L</div>
+  </nav>
+
+  <div class="layout">
+    <div class="top-row spring">
+      <div class="welcome-block">
+        <p class="welcome-label">Good evening</p>
+        <h1 class="welcome-name">Liam</h1>
+      </div>
+      <div class="score-block" style="text-align: right;">
+        <p class="score-label">Your score</p>
+        <div style="display: flex; align-items: baseline; gap: 3px; justify-content: flex-end;">
+          <span class="score-val">14</span>
+          <span class="score-denom">/18</span>
+        </div>
+        <p class="score-sub">14 of 18 winners announced</p>
+      </div>
+    </div>
+    <div class="cards spring2">
+      <div class="card">
+        <p class="card-label">Ballot Progress</p>
+        <p class="card-val">17</p>
+        <p class="card-sub">of 23 categories</p>
+        <div class="card-prog"><div class="card-prog-fill" style="width: 74%;"></div></div>
+      </div>
+      <div class="card">
+        <p class="card-label">Locks in</p>
+        <p class="card-val">3<span class="card-val-unit">d</span> 14<span class="card-val-unit">h</span></p>
+        <p class="card-sub">March 2, 8:00 PM</p>
+      </div>
+      <div class="card">
+        <p class="card-label">Community</p>
+        <p class="card-val">24</p>
+        <p class="card-sub">of 31 ballots complete</p>
+        <div class="card-prog"><div class="card-prog-fill" style="width: 77%;"></div></div>
+      </div>
+    </div>
+    <div class="actions spring3">
+      <a href="#" class="btn-fill">Edit Ballot</a>
+      <a href="#" class="btn-ghost">Leaderboard</a>
+      <a href="#" class="btn-ghost">Films</a>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  // Trigger animations when each section scrolls into view
+  const screens = document.querySelectorAll('.screen');
+  const triggered = new Set();
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !triggered.has(entry.target.id)) {
+        triggered.add(entry.target.id);
+        entry.target.querySelectorAll('[class*="a1"],[class*="a2"],[class*="a3"],[class*="a4"],[class*="a5"],[class*="reveal"],[class*="spring"]').forEach(el => {
+          el.style.animationPlayState = 'running';
+        });
+      }
+    });
+  }, { threshold: 0.15 });
+
+  screens.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

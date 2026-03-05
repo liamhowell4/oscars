@@ -54,25 +54,25 @@ export default function Films() {
       {/* Header */}
       <div className="text-center mb-12 animate-fade-in-up">
         <div className="deco-divider mb-6">
-          <span className="text-gold/50 text-xs">★</span>
+          <span className="text-gold/70 text-xs">★</span>
         </div>
         <h2 className="text-4xl font-display text-gold-gradient mb-3">Nominated Films</h2>
-        <p className="text-cream/40 font-body text-sm mb-6">
+        <p className="text-cream/65 font-body text-sm mb-6">
           {sortedFilms.length} films across {categories.length} categories
         </p>
-        <div className="inline-flex border border-gold/20 rounded-md overflow-hidden">
+        <div className="inline-flex border border-gold/30 overflow-hidden">
           <button
             onClick={() => setSortBy('noms')}
-            className={`px-4 py-2 text-xs uppercase tracking-wider font-body transition-colors ${
-              sortBy === 'noms' ? 'bg-gold/15 text-gold-light' : 'text-cream/40 hover:text-cream/70'
+            className={`px-4 py-2 text-xs uppercase tracking-wider font-body font-medium transition-colors ${
+              sortBy === 'noms' ? 'bg-gold/15 text-gold' : 'text-cream/65 hover:text-cream'
             }`}
           >
             Most Nominated
           </button>
           <button
             onClick={() => setSortBy('alpha')}
-            className={`px-4 py-2 text-xs uppercase tracking-wider font-body transition-colors border-l border-gold/20 ${
-              sortBy === 'alpha' ? 'bg-gold/15 text-gold-light' : 'text-cream/40 hover:text-cream/70'
+            className={`px-4 py-2 text-xs uppercase tracking-wider font-body font-medium transition-colors border-l border-gold/30 ${
+              sortBy === 'alpha' ? 'bg-gold/15 text-gold' : 'text-cream/65 hover:text-cream'
             }`}
           >
             A–Z
@@ -89,16 +89,16 @@ export default function Films() {
             style={{ animationDelay: `${Math.min(i * 40, 600)}ms` }}
           >
             <div className="flex items-baseline gap-3 mb-3">
-              <h3 className="text-lg font-display text-gold-light leading-tight">
+              <h3 className="text-lg font-display text-cream leading-tight">
                 {film.name}
               </h3>
-              <span className="text-xs text-cream/30 font-body whitespace-nowrap">
+              <span className="text-xs text-cream/55 font-body whitespace-nowrap">
                 {film.noms.length} nom{film.noms.length !== 1 ? 's' : ''}
               </span>
               {trailers[film.name] && (
                 <button
                   onClick={() => setActiveTrailer({ videoId: trailers[film.name], filmName: film.name })}
-                  className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded border border-gold/30 text-gold/70 hover:text-gold hover:border-gold/60 hover:bg-gold/5 transition-colors shrink-0"
+                  className="ml-auto flex items-center gap-1.5 px-2.5 py-1 border border-gold/40 text-gold/80 hover:text-gold hover:border-gold hover:bg-gold/5 transition-colors shrink-0"
                   aria-label={`Play trailer for ${film.name}`}
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">

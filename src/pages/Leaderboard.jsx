@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
+import { Link } from 'react-router-dom';
 import { db } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { useBallot } from '../contexts/BallotContext';
@@ -12,6 +13,10 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('everyone');
   const [expandedUserId, setExpandedUserId] = useState(null);
+  const [userGroups, setUserGroups] = useState([]);
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
+  const [groupEntries, setGroupEntries] = useState([]);
+  const [groupsLoading, setGroupsLoading] = useState(false);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -80,6 +85,89 @@ export default function Leaderboard() {
     fetchLeaderboard();
   }, [winners, config.ceremonyStarted]);
 
+  // Fetch user's groups when Groups tab is opened
+  useEffect(() => {
+    if (activeTab !== 'groups' || !user) return;
+    const fetchGroups = async () => {
+      setGroupsLoading(true);
+      try {
+        const q = query(collection(db, 'groups'), where('members', 'array-contains', user.uid));
+        const snap = await getDocs(q);
+        const g = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        setUserGroups(g);
+        if (g.length > 0 && !selectedGroupId) setSelectedGroupId(g[0].id);
+      } catch (err) {
+        console.error('Error fetching groups:', err);
+      }
+      setGroupsLoading(false);
+    };
+    fetchGroups();
+  }, [activeTab, user]);
+
+  // Fetch leaderboard for the selected group
+  useEffect(() => {
+    if (!selectedGroupId || activeTab !== 'groups') return;
+    const group = userGroups.find((g) => g.id === selectedGroupId);
+    if (!group) return;
+
+    const fetchGroupLeaderboard = async () => {
+      setGroupsLoading(true);
+      try {
+        const userDocs = await Promise.all(
+          group.members.map((uid) => getDoc(doc(db, 'users', uid)))
+        );
+        const memberUsers = userDocs.map((d) => ({ uid: d.id, ...(d.data() || {}) }));
+
+        if (config.ceremonyStarted) {
+          const ballotDocs = await Promise.all(
+            group.members.map((uid) => getDoc(doc(db, 'ballots', uid)))
+          );
+          const rawEntries = memberUsers.map((mu, i) => {
+            const ballot = ballotDocs[i].exists() ? ballotDocs[i].data() : {};
+            const picks = ballot.picks || {};
+            return {
+              userId: mu.uid,
+              displayName: mu.displayName || 'Anonymous',
+              photoURL: mu.photoURL || null,
+              score: calculateScore(picks, winners),
+              updatedAt: ballot.updatedAt || null,
+              ballotComplete: Object.keys(picks).length >= categories.length,
+            };
+          });
+          rawEntries.sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            const aTime = a.updatedAt?.toMillis?.() ?? Infinity;
+            const bTime = b.updatedAt?.toMillis?.() ?? Infinity;
+            return aTime - bTime;
+          });
+          let currentRank = 1;
+          const ranked = rawEntries.map((entry, i) => {
+            if (i > 0 && entry.score < rawEntries[i - 1].score) currentRank = i + 1;
+            return { ...entry, rank: currentRank };
+          });
+          setGroupEntries(ranked);
+        } else {
+          const allEntries = memberUsers.map((mu) => ({
+            userId: mu.uid,
+            displayName: mu.displayName || 'Anonymous',
+            photoURL: mu.photoURL || null,
+            ballotComplete: mu.ballotComplete || false,
+          }));
+          allEntries.sort((a, b) => {
+            if (a.ballotComplete !== b.ballotComplete) return (b.ballotComplete ? 1 : 0) - (a.ballotComplete ? 1 : 0);
+            return a.displayName.localeCompare(b.displayName);
+          });
+          setGroupEntries(allEntries);
+        }
+      } catch (err) {
+        console.error('Error fetching group leaderboard:', err);
+      }
+      setGroupsLoading(false);
+    };
+
+    fetchGroupLeaderboard();
+  }, [selectedGroupId, winners, config.ceremonyStarted]);
+
   const announcedCount = Object.keys(winners).length;
 
   const getInitials = (name) => {
@@ -128,49 +216,192 @@ export default function Leaderboard() {
       <div className="flex gap-1 mb-8 border-b border-gold/15">
         <button
           onClick={() => setActiveTab('everyone')}
-          className={`px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] font-body transition-colors ${
+          className={`px-5 py-2.5 text-xs uppercase tracking-[0.2em] font-body font-medium transition-colors ${
             activeTab === 'everyone'
               ? 'text-gold border-b border-gold'
-              : 'text-cream/30 hover:text-cream/60'
+              : 'text-cream/60 hover:text-cream'
           }`}
         >
           Everyone
         </button>
         <button
           onClick={() => setActiveTab('groups')}
-          className={`px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] font-body transition-colors flex items-center gap-2 ${
+          className={`px-5 py-2.5 text-xs uppercase tracking-[0.2em] font-body font-medium transition-colors ${
             activeTab === 'groups'
               ? 'text-gold border-b border-gold'
-              : 'text-cream/30 hover:text-cream/60'
+              : 'text-cream/60 hover:text-cream'
           }`}
         >
           Groups
-          <span className="text-[9px] bg-gold/10 text-gold/60 px-1.5 py-0.5">
-            Soon
-          </span>
         </button>
       </div>
 
       {activeTab === 'groups' ? (
-        <div className="card-deco text-center py-16">
-          <p className="text-cream/40 font-body">
-            Group leaderboards are coming soon.
-          </p>
-          <p className="text-cream/20 font-body text-sm mt-2">
-            Create or join a group to compete with friends.
-          </p>
-        </div>
+        <>
+          {groupsLoading ? (
+            <div className="text-center py-16">
+              <div className="inline-block w-8 h-8 border border-gold/30 border-t-gold rotate-45 animate-spin mb-4" />
+              <p className="text-cream/60 font-body text-sm uppercase tracking-widest">Loading</p>
+            </div>
+          ) : userGroups.length === 0 ? (
+            <div className="card-deco text-center py-16">
+              <p className="text-cream/40 font-body mb-4">You're not in any groups yet.</p>
+              <Link to="/groups" className="btn-gold">
+                Create or Join a Group
+              </Link>
+            </div>
+          ) : (
+            <>
+              {/* Group selector (only if multiple groups) */}
+              {userGroups.length > 1 && (
+                <div className="flex gap-2 flex-wrap mb-6">
+                  {userGroups.map((g) => (
+                    <button
+                      key={g.id}
+                      onClick={() => setSelectedGroupId(g.id)}
+                      className={`px-4 py-1.5 rounded font-body text-xs uppercase tracking-wider transition-colors ${
+                        selectedGroupId === g.id
+                          ? 'bg-gold/20 text-gold border border-gold/30'
+                          : 'bg-cream/5 text-cream/40 border border-cream/10 hover:text-cream/70'
+                      }`}
+                    >
+                      {g.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {groupEntries.length === 0 ? (
+                <div className="card-deco text-center py-16">
+                  <p className="text-cream/40 font-body">No members found.</p>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {groupEntries.map((entry, i) => {
+                    const isCurrentUser = user && entry.userId === user.uid;
+
+                    if (!config.ceremonyStarted) {
+                      return (
+                        <div
+                          key={entry.userId}
+                          className="animate-fade-in-up"
+                          style={{ animationDelay: `${Math.min(i * 50, 500)}ms` }}
+                        >
+                          <div
+                            className={`flex items-center gap-4 px-4 py-3 ${
+                              isCurrentUser
+                                ? 'border-l-2 border-gold bg-gold/[0.04]'
+                                : 'border-l-2 border-transparent'
+                            }`}
+                          >
+                            {entry.photoURL ? (
+                              <img
+                                src={entry.photoURL}
+                                alt={entry.displayName}
+                                className="w-9 h-9 rounded-full shrink-0 object-cover border border-cream/10"
+                                referrerPolicy="no-referrer"
+                              />
+                            ) : (
+                              <div className="w-9 h-9 rounded-full bg-gold/10 flex items-center justify-center text-gold/60 font-bold text-xs shrink-0 border border-gold/10">
+                                {getInitials(entry.displayName)}
+                              </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <p className={`font-body text-sm truncate ${
+                                isCurrentUser ? 'text-gold font-semibold' : 'text-cream/80'
+                              }`}>
+                                {entry.displayName}
+                                {isCurrentUser && (
+                                  <span className="text-cream/75 text-xs ml-2 font-normal">(you)</span>
+                                )}
+                              </p>
+                            </div>
+                            {entry.ballotComplete ? (
+                              <span className="flex items-center gap-1.5 text-xs font-body font-medium text-green-700 bg-green-500/10 px-2.5 py-1 shrink-0 border border-green-500/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                                  <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+                                </svg>
+                                Complete
+                              </span>
+                            ) : (
+                              <span className="text-xs font-body font-semibold text-cream shrink-0 uppercase tracking-wider">
+                                In progress
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    const rank = getRankDisplay(entry.rank);
+                    return (
+                      <div
+                        key={entry.userId}
+                        className="animate-fade-in-up"
+                        style={{ animationDelay: `${Math.min(i * 50, 500)}ms` }}
+                      >
+                        <div
+                          className={`flex items-center gap-4 px-4 py-3 ${
+                            isCurrentUser
+                              ? 'border-l-2 border-gold bg-gold/[0.04]'
+                              : 'border-l-2 border-transparent'
+                          }`}
+                        >
+                          <div className={`w-7 h-7 rounded flex items-center justify-center text-xs font-bold shrink-0 ${rank.bg}`}>
+                            {rank.label}
+                          </div>
+                          {entry.photoURL ? (
+                            <img
+                              src={entry.photoURL}
+                              alt={entry.displayName}
+                              className="w-9 h-9 rounded-full shrink-0 object-cover border border-cream/10"
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <div className="w-9 h-9 rounded-full bg-gold/10 flex items-center justify-center text-gold/60 font-bold text-xs shrink-0 border border-gold/10">
+                              {getInitials(entry.displayName)}
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className={`font-body text-sm truncate ${
+                              isCurrentUser ? 'text-gold font-semibold' : 'text-cream/80'
+                            }`}>
+                              {entry.displayName}
+                              {isCurrentUser && (
+                                <span className="text-cream/75 text-xs ml-2 font-normal">(you)</span>
+                              )}
+                            </p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <span className="text-gold font-display text-lg font-bold">
+                              {entry.score}
+                            </span>
+                            {announcedCount > 0 && (
+                              <span className="text-cream/20 text-xs font-body">
+                                {' '}/ {announcedCount}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          )}
+        </>
       ) : (
         <>
           {/* Pre-ceremony note */}
           {!config.ceremonyStarted && (
             <div className="border border-gold/15 bg-gold/[0.03] rounded-lg px-4 py-3 mb-6 flex items-start gap-3 animate-fade-in">
-              <span className="text-gold/50 mt-0.5 shrink-0">
+              <span className="text-gold mt-0.5 shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                   <path fillRule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clipRule="evenodd" />
                 </svg>
               </span>
-              <p className="text-cream/40 font-body text-sm">
+              <p className="text-cream/70 font-body text-sm">
                 Picks will be revealed when the ceremony begins. Scores update live as winners are announced.
               </p>
             </div>
@@ -179,7 +410,7 @@ export default function Leaderboard() {
           {loading ? (
             <div className="text-center py-16">
               <div className="inline-block w-8 h-8 border border-gold/30 border-t-gold rotate-45 animate-spin mb-4" />
-              <p className="text-cream/30 font-body text-sm uppercase tracking-widest">Loading</p>
+              <p className="text-cream/60 font-body text-sm uppercase tracking-widest">Loading</p>
             </div>
           ) : entries.length === 0 ? (
             <div className="card-deco text-center py-16">
@@ -227,21 +458,21 @@ export default function Leaderboard() {
                           }`}>
                             {entry.displayName}
                             {isCurrentUser && (
-                              <span className="text-cream/25 text-xs ml-2 font-normal">(you)</span>
+                              <span className="text-cream/75 text-xs ml-2 font-normal">(you)</span>
                             )}
                           </p>
                         </div>
 
                         {/* Completion badge */}
                         {entry.ballotComplete ? (
-                          <span className="flex items-center gap-1.5 text-[11px] font-body text-green-400/80 bg-green-500/10 px-2.5 py-1 rounded-full shrink-0 border border-green-500/10">
+                          <span className="flex items-center gap-1.5 text-xs font-body font-medium text-green-700 bg-green-500/10 px-2.5 py-1 shrink-0 border border-green-500/20">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
                               <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
                             </svg>
                             Complete
                           </span>
                         ) : (
-                          <span className="text-[11px] font-body text-cream/25 shrink-0 uppercase tracking-wider">
+                          <span className="text-xs font-body font-semibold text-cream shrink-0 uppercase tracking-wider">
                             In progress
                           </span>
                         )}
@@ -296,7 +527,7 @@ export default function Leaderboard() {
                         }`}>
                           {entry.displayName}
                           {isCurrentUser && (
-                            <span className="text-cream/25 text-xs ml-2 font-normal">(you)</span>
+                            <span className="text-cream/75 text-xs ml-2 font-normal">(you)</span>
                           )}
                         </p>
                       </div>
@@ -316,7 +547,7 @@ export default function Leaderboard() {
                           {entry.score}
                         </span>
                         {announcedCount > 0 && (
-                          <span className="text-cream/20 text-xs font-body">
+                          <span className="text-cream/75 text-xs font-body">
                             {' '}/ {announcedCount}
                           </span>
                         )}
@@ -327,7 +558,7 @@ export default function Leaderboard() {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        className={`w-4 h-4 text-cream/15 shrink-0 transition-transform duration-300 ${
+                        className={`w-4 h-4 text-cream/45 shrink-0 transition-transform duration-300 ${
                           isExpanded ? 'rotate-180' : ''
                         }`}
                       >
@@ -354,16 +585,16 @@ export default function Leaderboard() {
                                   <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
                                 </svg>
                               )}
-                              <span className="text-cream/30 w-40 truncate">
+                              <span className="text-cream w-40 truncate font-medium">
                                 {item.categoryName}
                               </span>
-                              <span className={item.correct ? 'text-green-400/70' : 'text-cream/25'}>
+                              <span className={item.correct ? 'text-green-700' : 'text-cream/80'}>
                                 {getNomineeName(item.categoryId, item.pickId)}
                               </span>
                             </div>
                           ))}
                         {breakdown.filter((item) => item.announced).length === 0 && (
-                          <p className="text-cream/25 text-xs py-2 font-body">
+                          <p className="text-cream/60 text-xs py-2 font-body">
                             No winners announced yet.
                           </p>
                         )}

@@ -7,6 +7,8 @@ import Ballot from './pages/Ballot'
 import Leaderboard from './pages/Leaderboard'
 import Admin from './pages/Admin'
 import Films from './pages/Films'
+import Groups from './pages/Groups'
+import GroupJoin from './pages/GroupJoin'
 import ChatToggle from './components/chat/ChatToggle'
 import ChatPanel from './components/chat/ChatPanel'
 
@@ -37,17 +39,8 @@ export default function App() {
             <Route path="/ballot" element={<ProtectedRoute><Ballot /></ProtectedRoute>} />
             <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
             <Route path="/films" element={<ProtectedRoute><Films /></ProtectedRoute>} />
-            <Route path="/groups" element={
-              <ProtectedRoute>
-                <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-                  <div className="deco-divider mb-6">
-                    <span className="text-gold/50 text-xs">★</span>
-                  </div>
-                  <h2 className="text-3xl font-display text-gold-gradient mb-4">Groups</h2>
-                  <p className="text-cream/30 font-body">Coming soon — compete with friends in private groups.</p>
-                </div>
-              </ProtectedRoute>
-            } />
+            <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
+            <Route path="/groups/join/:code" element={<GroupJoin />} />
             <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

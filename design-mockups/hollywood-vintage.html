@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oscar Ballot — Hollywood Vintage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Theme tokens ── */
+    :root {
+      --bg:          #F3EDE2;
+      --surface:     #EDE7DB;
+      --text:        #1C1830;
+      --text-2:      rgba(28,24,48,0.45);
+      --text-3:      rgba(28,24,48,0.26);
+      --rule:        rgba(28,24,48,0.10);
+      --rule-2:      rgba(28,24,48,0.18);
+      --accent:      #8B1A3A;
+      --accent-2:    #B89040;
+      --accent-subtle: rgba(139,26,58,0.06);
+      --btn-bg:      #8B1A3A;
+      --btn-text:    #F3EDE2;
+      --nav-text:    rgba(28,24,48,0.38);
+    }
+    [data-mode="dark"] {
+      --bg:          #0C0916;
+      --surface:     rgba(255,255,255,0.035);
+      --text:        #EDE5D0;
+      --text-2:      rgba(237,229,208,0.44);
+      --text-3:      rgba(237,229,208,0.24);
+      --rule:        rgba(237,229,208,0.09);
+      --rule-2:      rgba(237,229,208,0.18);
+      --accent:      #C8A85E;
+      --accent-2:    #8B1A3A;
+      --accent-subtle: rgba(200,168,94,0.07);
+      --btn-bg:      #8B1A3A;
+      --btn-text:    #EDE5D0;
+      --nav-text:    rgba(237,229,208,0.38);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      transition: background 0.35s ease, color 0.35s ease;
+      min-height: 100vh;
+    }
+
+    /* ── Mockup chrome ── */
+    .chrome {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: #0D0D0D;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 40px; padding: 0 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .chrome-label { font-family: 'DM Sans', sans-serif; font-size: 10px; color: rgba(255,255,255,0.22); letter-spacing: 0.05em; }
+    .chrome-tabs { display: flex; gap: 2px; }
+    .chrome-tab {
+      font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(255,255,255,0.38); padding: 5px 14px; border-radius: 4px;
+      cursor: pointer; border: none; background: none; transition: all 0.15s;
+    }
+    .chrome-tab:hover { color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.06); }
+    .chrome-tab.on { color: white; background: rgba(255,255,255,0.1); }
+    .mode-btn {
+      font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); padding: 5px 12px; border-radius: 4px;
+      cursor: pointer; border: 1px solid rgba(255,255,255,0.14); background: none; transition: all 0.15s;
+    }
+    .mode-btn:hover { color: white; border-color: rgba(255,255,255,0.3); }
+
+    /* ── App shell ── */
+    .app { padding-top: 40px; min-height: 100vh; }
+
+    /* ── App nav ── */
+    .app-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 72px; height: 72px;
+      background: var(--bg); border-bottom: 1px solid var(--rule);
+      position: sticky; top: 40px; z-index: 50;
+      transition: background 0.35s, border-color 0.35s;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif; font-weight: 600; font-style: italic;
+      font-size: 19px; letter-spacing: 0.04em; color: var(--accent);
+      transition: color 0.35s;
+    }
+    .nav-links { display: flex; gap: 36px; align-items: center; }
+    .nav-links a {
+      font-size: 11px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--nav-text); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.on { color: var(--text); font-weight: 400; }
+    .avatar {
+      width: 32px; height: 32px; border: 1px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-weight: 600; font-style: italic;
+      font-size: 16px; color: var(--accent); transition: all 0.35s;
+    }
+
+    /* ── Page visibility ── */
+    .page { display: none; }
+    .page.on { display: block; }
+
+    /* ── Shared ── */
+    .rule { width: 100%; height: 1px; background: var(--rule); transition: background 0.35s; }
+    .rule-thick { width: 100%; height: 1px; background: var(--rule-2); transition: background 0.35s; }
+    .diamond { display: inline-block; width: 5px; height: 5px; background: var(--accent); transform: rotate(45deg); transition: background 0.35s; }
+
+    .btn-primary {
+      display: inline-block;
+      font-size: 10px; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase;
+      padding: 14px 40px; background: var(--btn-bg); color: var(--btn-text);
+      border: 1px solid var(--btn-bg); cursor: pointer; text-decoration: none;
+      transition: background 0.25s, color 0.35s; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary:hover { filter: brightness(1.12); }
+    .btn-ghost {
+      display: inline-block;
+      font-size: 10px; font-weight: 300; letter-spacing: 0.28em; text-transform: uppercase;
+      padding: 14px 36px; border: 1px solid var(--rule-2); color: var(--text-2);
+      cursor: pointer; text-decoration: none; background: none;
+      transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-ghost:hover { border-color: var(--text-2); color: var(--text); }
+
+    /* ════════════════════════════════
+       LANDING
+    ════════════════════════════════ */
+    .landing {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: calc(100vh - 112px);
+      padding: 0 40px; text-align: center;
+    }
+    .l-eyebrow {
+      font-size: 10px; font-weight: 300; letter-spacing: 0.55em; text-transform: uppercase;
+      color: var(--text-3); margin-bottom: 20px; transition: color 0.35s;
+    }
+    .l-orn { display: flex; align-items: center; gap: 14px; width: 320px; margin: 0 auto 28px; }
+    .l-orn-line { flex: 1; height: 1px; background: var(--rule-2); transition: background 0.35s; }
+    .l-title {
+      font-family: 'Cormorant Garamond', serif; font-weight: 600; font-style: italic;
+      font-size: clamp(56px, 7vw, 88px); line-height: 0.88;
+      color: var(--text); margin-bottom: 20px; transition: color 0.35s;
+    }
+    .l-date {
+      font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400;
+      color: var(--text-2); margin-bottom: 44px; transition: color 0.35s;
+    }
+    .l-cta { display: flex; gap: 12px; justify-content: center; }
+    .landing-features { max-width: 760px; margin: 0 auto; padding: 64px 40px 80px; }
+    .feat-row {
+      display: flex; align-items: flex-start; gap: 32px;
+      padding: 28px 0; border-bottom: 1px solid var(--rule);
+      transition: border-color 0.35s;
+    }
+    .feat-row:first-child { border-top: 1px solid var(--rule); }
+    .feat-num {
+      font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400;
+      font-style: italic; color: var(--accent); min-width: 32px; transition: color 0.35s;
+    }
+    .feat-content { flex: 1; }
+    .feat-title {
+      font-size: 12px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text); margin-bottom: 6px; transition: color 0.35s;
+    }
+    .feat-desc { font-size: 13px; font-weight: 300; color: var(--text-2); line-height: 1.7; transition: color 0.35s; }
+
+    /* ════════════════════════════════
+       DASHBOARD
+    ════════════════════════════════ */
+    .dash {
+      display: flex; flex-direction: column; align-items: center;
+      max-width: 760px; margin: 0 auto; padding: 64px 40px 80px;
+      min-height: calc(100vh - 112px);
+      justify-content: center;
+    }
+    .d-eyebrow {
+      font-size: 10px; font-weight: 300; letter-spacing: 0.55em; text-transform: uppercase;
+      color: var(--accent); text-align: center; margin-bottom: 6px; transition: color 0.35s;
+    }
+    .d-name {
+      font-family: 'Cormorant Garamond', serif; font-size: 120px; font-weight: 600;
+      font-style: italic; line-height: 0.84; text-align: center;
+      color: var(--text); letter-spacing: -0.01em; margin-bottom: 10px; transition: color 0.35s;
+    }
+    .d-welcome {
+      font-size: 10px; font-weight: 300; letter-spacing: 0.5em; text-transform: uppercase;
+      color: var(--text-3); text-align: center; margin-bottom: 48px; transition: color 0.35s;
+    }
+    .d-divider {
+      width: 100%; height: 1px; background: var(--rule-2);
+      margin-bottom: 44px; position: relative; transition: background 0.35s;
+    }
+    .d-divider::before {
+      content: '✦'; position: absolute;
+      left: 50%; top: 50%; transform: translate(-50%,-50%);
+      font-size: 9px; color: var(--accent);
+      background: var(--bg); padding: 0 14px; transition: color 0.35s, background 0.35s;
+    }
+    .d-stats { width: 100%; margin-bottom: 48px; }
+    .d-stat-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 0; border-bottom: 1px solid var(--rule); transition: border-color 0.35s;
+    }
+    .d-stat-row:first-child { border-top: 1px solid var(--rule); }
+    .d-stat-name {
+      font-size: 11px; font-weight: 300; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--text-2); min-width: 160px; transition: color 0.35s;
+    }
+    .d-stat-bar {
+      flex: 1; margin: 0 48px; height: 1px;
+      background: var(--rule); position: relative; transition: background 0.35s;
+    }
+    .d-stat-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); transition: background 0.35s; }
+    .d-stat-val {
+      font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 600;
+      color: var(--accent); line-height: 1; transition: color 0.35s;
+    }
+    .d-stat-denom {
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 300;
+      color: var(--text-3); margin-left: 3px; transition: color 0.35s;
+    }
+    .d-actions { display: flex; gap: 12px; justify-content: center; }
+
+    /* ════════════════════════════════
+       BALLOT
+    ════════════════════════════════ */
+    .ballot { max-width: 680px; margin: 0 auto; padding: 56px 40px 80px; }
+    .b-top-rule { width: 100%; height: 1px; background: var(--rule-thick); margin-bottom: 28px; transition: background 0.35s; }
+    .b-progress-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .b-prog-label {
+      font-size: 10px; font-weight: 300; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--text-3); transition: color 0.35s;
+    }
+    .b-prog-frac {
+      font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 400;
+      font-style: italic; color: var(--text-3); transition: color 0.35s;
+    }
+    .b-prog-bar-wrap { flex: 1; margin: 0 24px; height: 1px; background: var(--rule); position: relative; transition: background 0.35s; }
+    .b-prog-bar-fill { position: absolute; left: 0; top: 0; height: 100%; width: 30%; background: var(--accent); transition: background 0.35s; }
+
+    .b-category-label {
+      font-size: 9px; font-weight: 500; letter-spacing: 0.45em; text-transform: uppercase;
+      color: var(--text-3); margin-bottom: 10px; transition: color 0.35s;
+    }
+    .b-category-name {
+      font-family: 'Cormorant Garamond', serif; font-weight: 600; font-style: italic;
+      font-size: 52px; line-height: 1; color: var(--text);
+      margin-bottom: 8px; letter-spacing: -0.01em; transition: color 0.35s;
+    }
+    .b-category-sub {
+      font-size: 11px; font-weight: 300; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-3); margin-bottom: 36px; transition: color 0.35s;
+    }
+
+    /* Nominee ruled list */
+    .nominees { margin-bottom: 48px; }
+    .nom {
+      display: flex; align-items: baseline; gap: 0;
+      padding: 18px 0 18px 16px;
+      border-bottom: 1px solid var(--rule);
+      border-left: 3px solid transparent;
+      cursor: pointer; transition: border-left-color 0.2s;
+    }
+    .nom:first-child { border-top: 1px solid var(--rule); }
+    .nom:hover { border-left-color: rgba(139,26,58,0.3); }
+    .nom.picked { border-left-color: var(--btn-bg); }
+    .nom-numeral {
+      font-family: 'Cormorant Garamond', serif; font-size: 13px; font-weight: 400;
+      font-style: italic; color: var(--text-3); min-width: 44px; transition: color 0.35s;
+    }
+    .nom.picked .nom-numeral { color: var(--btn-bg); }
+    .nom-info { flex: 1; }
+    .nom-name {
+      font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600;
+      color: var(--text); line-height: 1.2; margin-bottom: 2px; transition: color 0.2s;
+    }
+    .nom.picked .nom-name { color: var(--btn-bg); }
+    .nom-credit {
+      font-size: 11px; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-3); transition: color 0.35s;
+    }
+    .nom-check {
+      font-family: 'Cormorant Garamond', serif; font-size: 14px; font-style: italic;
+      color: var(--btn-bg); opacity: 0; margin-left: 16px; min-width: 48px;
+      text-align: right; transition: opacity 0.2s, color 0.35s;
+    }
+    .nom.picked .nom-check { opacity: 1; }
+
+    .b-nav { display: flex; align-items: center; justify-content: space-between; }
+    .b-nav-text {
+      font-size: 11px; font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-2); cursor: pointer; text-decoration: none;
+      padding: 8px 0; border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .b-nav-text:hover { color: var(--text); border-bottom-color: var(--rule-2); }
+    .b-nav-center {
+      font-family: 'Cormorant Garamond', serif; font-size: 14px; font-style: italic;
+      color: var(--text-3); transition: color 0.35s;
+    }
+
+    /* ════════════════════════════════
+       LEADERBOARD
+    ════════════════════════════════ */
+    .lb { max-width: 700px; margin: 0 auto; padding: 56px 40px 80px; }
+    .lb-top { margin-bottom: 36px; }
+    .lb-eyebrow {
+      font-size: 9px; font-weight: 500; letter-spacing: 0.45em; text-transform: uppercase;
+      color: var(--text-3); margin-bottom: 8px; transition: color 0.35s;
+    }
+    .lb-title {
+      font-family: 'Cormorant Garamond', serif; font-weight: 600; font-style: italic;
+      font-size: 52px; color: var(--text); line-height: 1; margin-bottom: 24px; transition: color 0.35s;
+    }
+    .lb-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--rule); margin-bottom: 28px; }
+    .lb-tab {
+      font-size: 10px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--text-3); padding: 10px 0; margin-right: 32px;
+      border-bottom: 1px solid transparent; cursor: pointer;
+      border: none; background: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    }
+    .lb-tab:hover { color: var(--text); }
+    .lb-tab.on { color: var(--text); border-bottom: 1px solid var(--text); margin-bottom: -1px; }
+    .lb-live {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid var(--rule); margin-bottom: 4px;
+      transition: border-color 0.35s;
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; animation: pulse 2s infinite; transition: background 0.35s; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .live-text {
+      font-size: 12px; font-weight: 300; color: var(--text-2); letter-spacing: 0.04em; transition: color 0.35s;
+    }
+    .live-text strong { color: var(--text); font-weight: 500; }
+
+    .lb-list { display: flex; flex-direction: column; }
+    .lb-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 0 16px 16px;
+      border-bottom: 1px solid var(--rule);
+      border-left: 3px solid transparent;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .lb-row:hover { border-left-color: rgba(139,26,58,0.2); }
+    .lb-row.me { border-left-color: var(--btn-bg); }
+    .lb-rank {
+      font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400;
+      font-style: italic; min-width: 36px; color: var(--text-2); transition: color 0.35s;
+    }
+    .lb-row.me .lb-rank { color: var(--btn-bg); }
+    .lb-av {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700;
+      color: white; transition: background 0.35s;
+    }
+    .lb-name {
+      flex: 1; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400;
+      color: var(--text); letter-spacing: 0.01em; transition: color 0.35s;
+    }
+    .lb-row.me .lb-name { font-style: italic; color: var(--btn-bg); }
+    .lb-you { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 300; color: var(--text-3); margin-left: 8px; font-style: normal; }
+    .lb-score {
+      font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600;
+      color: var(--accent); transition: color 0.35s;
+    }
+    .lb-of {
+      font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 300;
+      color: var(--text-3); margin-left: 3px;
+    }
+    .lb-top-note {
+      font-size: 9px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--text-3); text-align: right; width: 80px; text-align: right;
+    }
+    .lb-list > .lb-row:first-child { border-top: 1px solid var(--rule); }
+  </style>
+</head>
+<body>
+
+<!-- Chrome bar -->
+<div class="chrome">
+  <span class="chrome-label">Hollywood Vintage</span>
+  <div class="chrome-tabs">
+    <button class="chrome-tab" data-page="landing">Landing</button>
+    <button class="chrome-tab on" data-page="dashboard">Dashboard</button>
+    <button class="chrome-tab" data-page="ballot">Ballot</button>
+    <button class="chrome-tab" data-page="leaderboard">Leaderboard</button>
+  </div>
+  <button class="mode-btn" id="modeBtn">☽ Dark</button>
+</div>
+
+<div class="app">
+  <!-- App nav -->
+  <nav class="app-nav">
+    <span class="nav-logo">Oscar Ballot</span>
+    <div class="nav-links">
+      <a href="#" class="on">Ballot</a>
+      <a href="#">Leaderboard</a>
+      <a href="#">Films</a>
+      <a href="#">Groups</a>
+    </div>
+    <div class="avatar">L</div>
+  </nav>
+
+  <!-- ══ LANDING ══ -->
+  <div class="page" id="p-landing">
+    <div class="landing">
+      <p class="l-eyebrow">98th Academy Awards</p>
+      <div class="l-orn">
+        <div class="l-orn-line"></div>
+        <div class="diamond"></div>
+        <div class="l-orn-line"></div>
+      </div>
+      <h1 class="l-title">Oscar Ballot</h1>
+      <p class="l-date">March 2, 2026</p>
+      <div class="l-cta">
+        <button class="btn-primary" onclick="goPage('dashboard')">Sign in with Google</button>
+      </div>
+    </div>
+    <div class="landing-features">
+      <div class="feat-row">
+        <span class="feat-num">I.</span>
+        <div class="feat-content">
+          <p class="feat-title">Make Your Picks</p>
+          <p class="feat-desc">Pick winners across all 23 categories and lock in your predictions before the ceremony begins.</p>
+        </div>
+      </div>
+      <div class="feat-row">
+        <span class="feat-num">II.</span>
+        <div class="feat-content">
+          <p class="feat-title">Join Groups</p>
+          <p class="feat-desc">Create or join private groups and compete with friends to see who knows the Academy best.</p>
+        </div>
+      </div>
+      <div class="feat-row">
+        <span class="feat-num">III.</span>
+        <div class="feat-content">
+          <p class="feat-title">Live Scoring</p>
+          <p class="feat-desc">Watch your score update in real-time as winners are announced during the ceremony.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DASHBOARD ══ -->
+  <div class="page on" id="p-dashboard">
+    <div class="dash">
+      <p class="d-eyebrow">98th Academy Awards · March 2, 2026</p>
+      <h1 class="d-name">Liam</h1>
+      <p class="d-welcome">Welcome back</p>
+      <div class="d-divider"></div>
+      <div class="d-stats">
+        <div class="d-stat-row">
+          <span class="d-stat-name">Ballot Progress</span>
+          <div class="d-stat-bar"><div class="d-stat-fill" style="width:74%"></div></div>
+          <span class="d-stat-val">17<span class="d-stat-denom">/23</span></span>
+        </div>
+        <div class="d-stat-row">
+          <span class="d-stat-name">Your Score</span>
+          <div class="d-stat-bar"><div class="d-stat-fill" style="width:78%"></div></div>
+          <span class="d-stat-val">14<span class="d-stat-denom">/18</span></span>
+        </div>
+        <div class="d-stat-row">
+          <span class="d-stat-name">Community</span>
+          <div class="d-stat-bar"><div class="d-stat-fill" style="width:77%"></div></div>
+          <span class="d-stat-val">24<span class="d-stat-denom">/31</span></span>
+        </div>
+      </div>
+      <div class="d-actions">
+        <button class="btn-primary" onclick="goPage('ballot')">Edit Ballot</button>
+        <button class="btn-ghost" onclick="goPage('leaderboard')">Leaderboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BALLOT ══ -->
+  <div class="page" id="p-ballot">
+    <div class="ballot">
+      <div class="b-top-rule"></div>
+      <div class="b-progress-row">
+        <span class="b-prog-label">Best Picture</span>
+        <div class="b-prog-bar-wrap"><div class="b-prog-bar-fill"></div></div>
+        <span class="b-prog-frac">7 / 23</span>
+      </div>
+      <p class="b-category-label">Academy Award for</p>
+      <h2 class="b-category-name">Best Motion Picture</h2>
+      <p class="b-category-sub">Select one nominee</p>
+
+      <div class="nominees">
+        <div class="nom" onclick="pickNom(this)">
+          <span class="nom-numeral">I.</span>
+          <div class="nom-info">
+            <p class="nom-name">The Brutalist</p>
+            <p class="nom-credit">Brady Corbet &nbsp;·&nbsp; Focus Features</p>
+          </div>
+          <span class="nom-check">— my pick</span>
+        </div>
+        <div class="nom picked" onclick="pickNom(this)">
+          <span class="nom-numeral">II.</span>
+          <div class="nom-info">
+            <p class="nom-name">Anora</p>
+            <p class="nom-credit">Sean Baker &nbsp;·&nbsp; Neon</p>
+          </div>
+          <span class="nom-check">— my pick</span>
+        </div>
+        <div class="nom" onclick="pickNom(this)">
+          <span class="nom-numeral">III.</span>
+          <div class="nom-info">
+            <p class="nom-name">Conclave</p>
+            <p class="nom-credit">Edward Berger &nbsp;·&nbsp; Focus Features</p>
+          </div>
+          <span class="nom-check">— my pick</span>
+        </div>
+        <div class="nom" onclick="pickNom(this)">
+          <span class="nom-numeral">IV.</span>
+          <div class="nom-info">
+            <p class="nom-name">Emilia Pérez</p>
+            <p class="nom-credit">Jacques Audiard &nbsp;·&nbsp; Netflix</p>
+          </div>
+          <span class="nom-check">— my pick</span>
+        </div>
+        <div class="nom" onclick="pickNom(this)">
+          <span class="nom-numeral">V.</span>
+          <div class="nom-info">
+            <p class="nom-name">Wicked</p>
+            <p class="nom-credit">Jon M. Chu &nbsp;·&nbsp; Universal Pictures</p>
+          </div>
+          <span class="nom-check">— my pick</span>
+        </div>
+      </div>
+
+      <div class="b-nav">
+        <a href="#" class="b-nav-text">← Previous Category</a>
+        <span class="b-nav-center">7 of 23 categories</span>
+        <a href="#" class="b-nav-text">Next Category →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEADERBOARD ══ -->
+  <div class="page" id="p-leaderboard">
+    <div class="lb">
+      <div class="lb-top">
+        <p class="lb-eyebrow">The Standing</p>
+        <h2 class="lb-title">Leaderboard</h2>
+        <div class="lb-tabs">
+          <button class="lb-tab on">Everyone</button>
+          <button class="lb-tab">Groups</button>
+        </div>
+        <div class="lb-live">
+          <div class="live-dot"></div>
+          <p class="live-text">Live · <strong>18 of 23</strong> winners announced.</p>
+        </div>
+      </div>
+      <div class="lb-list">
+        <div class="lb-row">
+          <span class="lb-rank">1.</span>
+          <div class="lb-av" style="background:#C084AA">EW</div>
+          <span class="lb-name">Emma Watson</span>
+          <span class="lb-score">18<span class="lb-of">/18</span></span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank">2.</span>
+          <div class="lb-av" style="background:#7AA8C4">JC</div>
+          <span class="lb-name">James Chen</span>
+          <span class="lb-score">17<span class="lb-of">/18</span></span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank">3.</span>
+          <div class="lb-av" style="background:#7AB87A">SM</div>
+          <span class="lb-name">Sofia Martinez</span>
+          <span class="lb-score">16<span class="lb-of">/18</span></span>
+        </div>
+        <div class="lb-row me">
+          <span class="lb-rank">4.</span>
+          <div class="lb-av" style="background:#8B6848">LH</div>
+          <span class="lb-name">Liam H.<span class="lb-you">(you)</span></span>
+          <span class="lb-score">14<span class="lb-of">/18</span></span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank">5.</span>
+          <div class="lb-av" style="background:#9E8FA8">RP</div>
+          <span class="lb-name">Ryan Park</span>
+          <span class="lb-score">13<span class="lb-of">/18</span></span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank">6.</span>
+          <div class="lb-av" style="background:#A8987A">OK</div>
+          <span class="lb-name">Olivia Kim</span>
+          <span class="lb-score">11<span class="lb-of">/18</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const pages = { landing:'p-landing', dashboard:'p-dashboard', ballot:'p-ballot', leaderboard:'p-leaderboard' };
+
+  function goPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+    document.querySelectorAll('.chrome-tab').forEach(t => t.classList.remove('on'));
+    document.getElementById(pages[name]).classList.add('on');
+    document.querySelectorAll('.chrome-tab').forEach(t => { if(t.dataset.page === name) t.classList.add('on'); });
+  }
+
+  document.querySelectorAll('.chrome-tab').forEach(t => {
+    t.addEventListener('click', () => goPage(t.dataset.page));
+  });
+
+  document.getElementById('modeBtn').addEventListener('click', () => {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-mode') === 'dark';
+    html.setAttribute('data-mode', isDark ? 'light' : 'dark');
+    document.getElementById('modeBtn').textContent = isDark ? '☽ Dark' : '☀ Light';
+  });
+
+  function pickNom(el) {
+    el.closest('.nominees').querySelectorAll('.nom').forEach(n => n.classList.remove('picked'));
+    el.classList.add('picked');
+  }
+</script>
+</body>
+</html>
